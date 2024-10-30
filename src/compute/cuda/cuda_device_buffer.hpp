@@ -21,44 +21,34 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_backend.hpp
+ * @file cuda_device_buffer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_backend interface
- * @date 2024-10-31
+ * @brief Defines the compute::cuda_device_buffer interface
+ * @date 2024-10-30
  * 
  */
 
-#include <xmipp4/core/compute/device_backend.hpp>
+#include <xmipp4/core/compute/device_buffer.hpp>
 
 namespace xmipp4 
 {
 namespace compute
 {
 
-class device_manager;
-
-
-
-class cuda_device_backend final
-    : public device_backend
+class cuda_device_buffer
+    : public device_buffer
 {
 public:
-    const std::string& get_name() const noexcept final;
-    version get_version() const noexcept final;
-    bool is_available() const noexcept final;
+    cuda_device_buffer() = default;
+    cuda_device_buffer(const cuda_device_buffer &other) = default;
+    cuda_device_buffer(cuda_device_buffer &&other) = default;
+    virtual ~cuda_device_buffer() = default;
 
-    void enumerate_devices(std::vector<std::size_t> &ids) const final;
-    bool get_device_properties(std::size_t id, device_properties &desc) const final;
+    cuda_device_buffer& operator=(const cuda_device_buffer &other) = default;
+    cuda_device_buffer& operator=(cuda_device_buffer &&other) = default;
 
-    std::unique_ptr<device> create_device(std::size_t id) final;
-    std::shared_ptr<device> create_device_shared(std::size_t id) final;
-
-    static bool register_at(device_manager &manager);
-
-private:
-    static const std::string m_name;
-
-    int get_device_count();
+    virtual void* get_data() noexcept = 0;
+    virtual const void* get_data() const noexcept = 0;
 
 }; 
 

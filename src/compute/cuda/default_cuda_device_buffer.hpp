@@ -21,44 +21,46 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_backend.hpp
+ * @file default_cuda_device_buffer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_backend interface
- * @date 2024-10-31
+ * @brief Defines the compute::default_cuda_device_buffer class
+ * @date 2024-10-30
  * 
  */
 
-#include <xmipp4/core/compute/device_backend.hpp>
+#include "cuda_device_buffer.hpp"
 
 namespace xmipp4 
 {
 namespace compute
 {
 
-class device_manager;
-
-
-
-class cuda_device_backend final
-    : public device_backend
+class default_cuda_device_buffer
+    : public cuda_device_buffer
 {
 public:
-    const std::string& get_name() const noexcept final;
-    version get_version() const noexcept final;
-    bool is_available() const noexcept final;
+    default_cuda_device_buffer() noexcept;
+    default_cuda_device_buffer(numerical_type type, std::size_t count);
+    default_cuda_device_buffer(const default_cuda_device_buffer &other) = delete;
+    default_cuda_device_buffer(default_cuda_device_buffer &&other) noexcept;
+    virtual ~default_cuda_device_buffer();
 
-    void enumerate_devices(std::vector<std::size_t> &ids) const final;
-    bool get_device_properties(std::size_t id, device_properties &desc) const final;
+    default_cuda_device_buffer& operator=(const default_cuda_device_buffer &other) = delete;
+    default_cuda_device_buffer& operator=(default_cuda_device_buffer &&other) noexcept;
 
-    std::unique_ptr<device> create_device(std::size_t id) final;
-    std::shared_ptr<device> create_device_shared(std::size_t id) final;
+    void swap(default_cuda_device_buffer &other) noexcept;
+    void reset() noexcept;
 
-    static bool register_at(device_manager &manager);
+    numerical_type get_type() const noexcept final;
+    std::size_t get_count() const noexcept final;
+
+    void* get_data() noexcept final;
+    const void* get_data() const noexcept final;
 
 private:
-    static const std::string m_name;
-
-    int get_device_count();
+    numerical_type m_type;
+    std::size_t m_count;
+    void* m_data;
 
 }; 
 
