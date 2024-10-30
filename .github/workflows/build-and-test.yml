@@ -65,13 +65,13 @@ jobs:
       - uses: Jimver/cuda-toolkit@master
         id: cuda-toolkit
         with:
-          cuda: matrix.cuda
+          cuda: ${{ matrix.cuda }}
 
       - name: Install xmipp4-core
         id: install-xmipp4-core
         uses: ./.github/composites/install-xmipp4-core
         with:
-          ref: main
+          ref: olz_compute # TODO for testing
       
       - name: Configure and build with CMake
         uses: threeal/cmake-action@main
