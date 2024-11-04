@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,51 +21,41 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device.cpp
+ * @file cuda_device_memory_pool.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device.hpp
- * @date 2024-10-30
+ * @brief Defines the compute::cuda_device_memory_pool interface
+ * @date 2024-10-31
  * 
  */
 
-#include "cuda_device.hpp"
+#include <xmipp4/core/compute/device_memory_poool.hpp>
 
-#include "cuda_device_queue.hpp"
-#include "cuda_device_memory_pool.hpp"
-
-#include <memory>
-
-namespace xmipp4
+namespace xmipp4 
 {
 namespace compute
 {
 
-cuda_device::cuda_device(int device)
-    : m_device(device)
-{
-}
+class cuda_device_buffer;
 
-std::unique_ptr<device_queue> cuda_device::create_queue()
+class cuda_device_memory_pool
+    : public device_memory_pool
 {
-    return std::make_unique<cuda_device_queue>(m_device);
-}
+public:
+    cuda_device_memory_pool() = default;
+    cuda_device_memory_pool(const cuda_device_memory_pool &other) = default;
+    cuda_device_memory_pool(cuda_device_memory_pool &&other) = default;
+    virtual ~cuda_device_memory_pool() = default;
 
-std::shared_ptr<device_queue> cuda_device::create_queue_shared()
-{
-    return std::make_shared<cuda_device_queue>(m_device);
-}
+    cuda_device_memory_pool& operator=(const cuda_device_memory_pool &other) = default;
+    cuda_device_memory_pool& operator=(cuda_device_memory_pool &&other) = default;
 
-std::unique_ptr<device_memory_pool> 
-cuda_device::create_memory_pool() final
-{
-    return std::make_unique<cuda_device_memory_pool>()
-}
+    std::unique_ptr<device_buffer> 
+    create_buffer(numerical_type type, std::size_t count) final;
 
-std::shared_ptr<device_memory_pool> 
-cuda_device::create_memory_pool_shared() final
-{
-    return std::make_shared<cuda_device_memory_pool>()
-}
+    std::shared_ptr<device_buffer> 
+    create_buffer_shared(numerical_type type, std::size_t count) final;
+
+}; 
 
 } // namespace compute
 } // namespace xmipp4
