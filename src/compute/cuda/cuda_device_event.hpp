@@ -21,51 +21,52 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_to_host_transfer.hpp
+ * @file cuda_device_event.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_to_host_transfer class
- * @date 2024-11-06
+ * @brief Defines cuda_device_event class.
+ * @date 2024-11-07
  * 
  */
 
-#include <xmipp4/core/compute/device_to_host_transfer.hpp>
-
-#include "cuda_device_event.hpp"
+#include <cuda_runtime.h>
 
 namespace xmipp4 
 {
 namespace compute
 {
 
+class device_queue;
+class cuda_device_queue;
 
-/**
- * @brief CUDA implementation of the device to host transfer engine.
- * 
- */
-class cuda_device_to_host_transfer final
-    : public device_to_host_transfer
+
+
+class cuda_device_event
 {
 public:
-    void transfer(const device_buffer &src_buffer, 
-                  const std::shared_ptr<host_buffer> &dst_buffer, 
-                  device_queue &queue ) final;
+    using handle = cudaEvent_t;
 
-    std::shared_ptr<host_buffer> 
-    transfer_nocopy(const std::shared_ptr<device_buffer> &buffer, 
-                    host_memory_allocator &allocator,
-                    device_queue &queue ) final;
+    cuda_device_event();
+    cuda_device_event(const cuda_device_event &other) = delete;
+    cuda_device_event(cuda_device_event &&other) noexcept;
+    ~cuda_device_event();
 
-    std::shared_ptr<const host_buffer> 
-    transfer_nocopy(const std::shared_ptr<const device_buffer> &buffer, 
-                    host_memory_allocator &allocator,
-                    device_queue &queue ) final;
+    cuda_device_event& operator=(const cuda_device_event &other) = delete;
+    cuda_device_event& operator=(cuda_device_event &&other) noexcept;
 
+    void swap(cuda_device_event &other) noexcept;
+    void reset() noexcept;
+    handle get_handle() noexcept;
 
-    void wait() final;
+    void record(cuda_device_queue &queue);
+    void record(device_queue &queue);
+
+    void wait(cuda_device_queue &queue) const;
+    void wait(device_queue &queue) const;
+
+    void synchronize() const;
 
 private:
-    cuda_device_event m_event;
-    std::shared_ptr<const host_buffer> m_current;
+    handle m_event;
 
 }; 
 
