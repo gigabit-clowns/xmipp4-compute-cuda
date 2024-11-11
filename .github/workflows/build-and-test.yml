@@ -64,6 +64,7 @@ jobs:
 
       - uses: Jimver/cuda-toolkit@master
         id: cuda-toolkit
+        working-directory: ${{ github.workspace }}/../
         with:
           cuda: ${{ matrix.cuda }}
           method: 'network'
