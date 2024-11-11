@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,55 +19,35 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_event.hpp
+ * @file cuda_host_malloc.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_event class.
- * @date 2024-11-07
+ * @brief Implementation of cuda_host_malloc.hpp
+ * @date 2024-11-06
  * 
  */
 
+#include "cuda_host_malloc.hpp"
+
 #include <cuda_runtime.h>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class device_queue;
-class cuda_device_queue;
-
-
-
-class cuda_device_event
+inline
+void* cuda_host_malloc::allocate(std::size_t size)
 {
-public:
-    using handle = cudaEvent_t;
+    void* result;
+    cudaMallocHost(&result, size); // TODO check
+    return result;
+}
 
-    cuda_device_event();
-    cuda_device_event(const cuda_device_event &other) = delete;
-    cuda_device_event(cuda_device_event &&other) noexcept;
-    ~cuda_device_event();
-
-    cuda_device_event& operator=(const cuda_device_event &other) = delete;
-    cuda_device_event& operator=(cuda_device_event &&other) noexcept;
-
-    void swap(cuda_device_event &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void record(cuda_device_queue &queue);
-    void record(device_queue &queue);
-
-    void wait(cuda_device_queue &queue) const;
-    void wait(device_queue &queue) const;
-
-    void synchronize() const;
-    bool query() const;
-
-private:
-    handle m_event;
-
-}; 
+inline
+void cuda_host_malloc::deallocate(void* data, std::size_t)
+{
+    cudaFreeHost(data); // TODO check
+}
 
 } // namespace compute
 } // namespace xmipp4

@@ -21,16 +21,14 @@
  ***************************************************************************/
 
 /**
- * @file default_cuda_device_buffer.hpp
+ * @file default_cuda_host_buffer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::default_cuda_device_buffer class
+ * @brief Defines the compute::default_cuda_host_buffer class
  * @date 2024-10-30
  * 
  */
 
-#include "cuda_device_buffer.hpp"
-
-#include <vector>
+#include <xmipp4/core/compute/host_buffer.hpp>
 
 namespace xmipp4 
 {
@@ -38,30 +36,29 @@ namespace compute
 {
 
 class cuda_memory_block;
-class cuda_device_memory_allocator;
-class cuda_device_queue;
+class cuda_host_memory_allocator;
 
 
 
-class default_cuda_device_buffer final
-    : public cuda_device_buffer
+class default_cuda_host_buffer final
+    : public host_buffer
 {
 public:
-    default_cuda_device_buffer() noexcept;
-    default_cuda_device_buffer(numerical_type type,
-                               std::size_t count,
-                               const cuda_memory_block &block , 
-                               cuda_device_memory_allocator &allocator ) noexcept;
-    default_cuda_device_buffer(const default_cuda_device_buffer &other) = delete;
-    default_cuda_device_buffer(default_cuda_device_buffer &&other) noexcept;
-    virtual ~default_cuda_device_buffer();
+    default_cuda_host_buffer() noexcept;
+    default_cuda_host_buffer(numerical_type type,
+                             std::size_t count,
+                             const cuda_memory_block &block , 
+                             cuda_host_memory_allocator &allocator) noexcept;
+    default_cuda_host_buffer(const default_cuda_host_buffer &other) = delete;
+    default_cuda_host_buffer(default_cuda_host_buffer &&other) noexcept;
+    virtual ~default_cuda_host_buffer();
 
-    default_cuda_device_buffer& 
-    operator=(const default_cuda_device_buffer &other) = delete;
-    default_cuda_device_buffer& 
-    operator=(default_cuda_device_buffer &&other) noexcept;
+    default_cuda_host_buffer& 
+    operator=(const default_cuda_host_buffer &other) = delete;
+    default_cuda_host_buffer& 
+    operator=(default_cuda_host_buffer &&other) noexcept;
 
-    void swap(default_cuda_device_buffer &other) noexcept;
+    void swap(default_cuda_host_buffer &other) noexcept;
     void reset() noexcept;
 
     numerical_type get_type() const noexcept final;
@@ -70,14 +67,11 @@ public:
     void* get_data() noexcept final;
     const void* get_data() const noexcept final;
 
-    void record_queue(cuda_device_queue &queue);
-
 private:
     numerical_type m_type;
     std::size_t m_count;
     const cuda_memory_block *m_block;
-    cuda_device_memory_allocator *m_allocator;
-    std::vector<cuda_device_queue*> m_queues;
+    cuda_host_memory_allocator *m_allocator;
 
 }; 
 

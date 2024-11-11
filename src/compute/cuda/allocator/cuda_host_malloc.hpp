@@ -21,55 +21,52 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_event.hpp
+ * @file cuda_host_malloc.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_event class.
- * @date 2024-11-07
+ * @brief Defines cuda_host_malloc class.
+ * @date 2024-11-06
  * 
  */
 
-#include <cuda_runtime.h>
+#include <cstddef>
 
+/**
+ * @brief Wrapper around cudaHostMalloc and cudaHostFree
+ * 
+ */
 namespace xmipp4 
 {
 namespace compute
 {
 
-class device_queue;
-class cuda_device_queue;
-
-
-
-class cuda_device_event
+struct cuda_host_malloc
 {
-public:
-    using handle = cudaEvent_t;
+    /**
+     * @brief Allocate memory in the host.
+     * 
+     * Allocated memory will be managed by CUDA and thus it
+     * will be pinned. This means that transfers from/to 
+     * devices occur in an efficient manner
+     * 
+     * @param size Number of bytes to be allocated.
+     * @return void* Allocated data.
+     */
+    static void* allocate(std::size_t size);
 
-    cuda_device_event();
-    cuda_device_event(const cuda_device_event &other) = delete;
-    cuda_device_event(cuda_device_event &&other) noexcept;
-    ~cuda_device_event();
+    /**
+     * @brief Release data.
+     * 
+     * @param data Data to be released. Must have been obtained from a
+     * call to allocate.
+     * @param size Number of bytes to be released. Must be equal to 
+     * the bytes used when calling allocate.
+     * 
+     */
+    static void deallocate(void* data, std::size_t size);
 
-    cuda_device_event& operator=(const cuda_device_event &other) = delete;
-    cuda_device_event& operator=(cuda_device_event &&other) noexcept;
-
-    void swap(cuda_device_event &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void record(cuda_device_queue &queue);
-    void record(device_queue &queue);
-
-    void wait(cuda_device_queue &queue) const;
-    void wait(device_queue &queue) const;
-
-    void synchronize() const;
-    bool query() const;
-
-private:
-    handle m_event;
-
-}; 
+};
 
 } // namespace compute
 } // namespace xmipp4
+
+#include "cuda_host_malloc.inl"
