@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,70 +21,54 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.cpp
+ * @file cuda_device_event.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_queue.hpp
- * @date 2024-10-30
+ * @brief Defines cuda_device_event class.
+ * @date 2024-11-07
  * 
  */
 
-#include "cuda_device_queue.hpp"
+#include <cuda_runtime.h>
 
-#include <utility>
-
-namespace xmipp4
+namespace xmipp4 
 {
 namespace compute
 {
 
-cuda_device_queue::cuda_device_queue(int device)
-{
-    cudaSetDevice(device);
-    cudaStreamCreate(&m_stream); // TODO check
-}
-
-cuda_device_queue::cuda_device_queue(cuda_device_queue &&other) noexcept
-    : m_stream(other.m_stream)
-{
-    other.m_stream = nullptr;
-}
-
-cuda_device_queue::~cuda_device_queue()
-{
-    reset();
-}
-
-cuda_device_queue& 
-cuda_device_queue::operator=(cuda_device_queue &&other) noexcept
-{
-    swap(other);
-    other.reset();
-    return *this;
-}
-
-void cuda_device_queue::swap(cuda_device_queue &other) noexcept
-{
-    std::swap(m_stream, other.m_stream);
-}
-
-void cuda_device_queue::reset() noexcept
-{
-    if (m_stream)
-    {
-        cudaStreamDestroy(m_stream);// TODO check
-    }
-}
+class device_queue;
+class cuda_device_queue;
 
 
-cuda_device_queue::handle cuda_device_queue::get_handle() noexcept
-{
-    return m_stream;
-}
 
-void cuda_device_queue::synchronize() const
+class cuda_device_event
 {
-    cudaStreamSynchronize(m_stream);
-}
+public:
+    using handle = cudaEvent_t;
+
+    cuda_device_event();
+    cuda_device_event(const cuda_device_event &other) = delete;
+    cuda_device_event(cuda_device_event &&other) noexcept;
+    ~cuda_device_event();
+
+    cuda_device_event& operator=(const cuda_device_event &other) = delete;
+    cuda_device_event& operator=(cuda_device_event &&other) noexcept;
+
+    void swap(cuda_device_event &other) noexcept;
+    void reset() noexcept;
+    handle get_handle() noexcept;
+
+    void record(cuda_device_queue &queue);
+    void record(device_queue &queue);
+
+    void wait(cuda_device_queue &queue) const;
+    void wait(device_queue &queue) const;
+
+    void synchronize() const;
+
+private:
+    handle m_event;
+
+}; 
 
 } // namespace compute
 } // namespace xmipp4

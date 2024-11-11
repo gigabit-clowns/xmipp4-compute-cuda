@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,70 +21,53 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.cpp
+ * @file cuda_device_to_host_transfer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_queue.hpp
- * @date 2024-10-30
+ * @brief Defines the compute::cuda_device_to_host_transfer class
+ * @date 2024-11-06
  * 
  */
 
-#include "cuda_device_queue.hpp"
+#include <xmipp4/core/compute/device_to_host_transfer.hpp>
 
-#include <utility>
+#include "cuda_device_event.hpp"
 
-namespace xmipp4
+namespace xmipp4 
 {
 namespace compute
 {
 
-cuda_device_queue::cuda_device_queue(int device)
-{
-    cudaSetDevice(device);
-    cudaStreamCreate(&m_stream); // TODO check
-}
 
-cuda_device_queue::cuda_device_queue(cuda_device_queue &&other) noexcept
-    : m_stream(other.m_stream)
+/**
+ * @brief CUDA implementation of the device to host transfer engine.
+ * 
+ */
+class cuda_device_to_host_transfer final
+    : public device_to_host_transfer
 {
-    other.m_stream = nullptr;
-}
+public:
+    void transfer(const device_buffer &src_buffer, 
+                  const std::shared_ptr<host_buffer> &dst_buffer, 
+                  device_queue &queue ) final;
 
-cuda_device_queue::~cuda_device_queue()
-{
-    reset();
-}
+    std::shared_ptr<host_buffer> 
+    transfer_nocopy(const std::shared_ptr<device_buffer> &buffer, 
+                    host_memory_allocator &allocator,
+                    device_queue &queue ) final;
 
-cuda_device_queue& 
-cuda_device_queue::operator=(cuda_device_queue &&other) noexcept
-{
-    swap(other);
-    other.reset();
-    return *this;
-}
-
-void cuda_device_queue::swap(cuda_device_queue &other) noexcept
-{
-    std::swap(m_stream, other.m_stream);
-}
-
-void cuda_device_queue::reset() noexcept
-{
-    if (m_stream)
-    {
-        cudaStreamDestroy(m_stream);// TODO check
-    }
-}
+    std::shared_ptr<const host_buffer> 
+    transfer_nocopy(const std::shared_ptr<const device_buffer> &buffer, 
+                    host_memory_allocator &allocator,
+                    device_queue &queue ) final;
 
 
-cuda_device_queue::handle cuda_device_queue::get_handle() noexcept
-{
-    return m_stream;
-}
+    void wait() final;
 
-void cuda_device_queue::synchronize() const
-{
-    cudaStreamSynchronize(m_stream);
-}
+private:
+    cuda_device_event m_event;
+    std::shared_ptr<const host_buffer> m_current;
+
+}; 
 
 } // namespace compute
 } // namespace xmipp4

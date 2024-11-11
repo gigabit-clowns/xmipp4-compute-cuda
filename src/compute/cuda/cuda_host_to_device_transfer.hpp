@@ -21,46 +21,52 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_host_to_device_transfer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Defines the compute::cuda_host_to_device_transfer class
+ * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include <xmipp4/core/compute/host_to_device_transfer.hpp>
 
-#include <cuda_runtime.h>
+#include "cuda_device_event.hpp"
 
 namespace xmipp4 
 {
 namespace compute
 {
 
-class cuda_device_queue_backend;
 
-class cuda_device_queue final
-    : public device_queue
+/**
+ * @brief CUDA implementation of the host to device transfer engine.
+ * 
+ */
+class cuda_host_to_device_transfer final
+    : public host_to_device_transfer
 {
 public:
-    using handle = cudaStream_t;
+    void transfer(const std::shared_ptr<const host_buffer> &src_buffer, 
+                  device_buffer &dst_buffer, 
+                  device_queue &queue ) final;
 
-    cuda_device_queue(int device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    virtual ~cuda_device_queue();
+    std::shared_ptr<device_buffer> 
+    transfer_nocopy(const std::shared_ptr<host_buffer> &buffer, 
+                    device_memory_allocator &allocator,
+                    device_queue &queue ) final;
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
+    std::shared_ptr<const device_buffer> 
+    transfer_nocopy(const std::shared_ptr<const host_buffer> &buffer, 
+                    device_memory_allocator &allocator,
+                    device_queue &queue ) final;
 
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
 
-    void synchronize() const final;
+    void wait() final;
+    void wait(device_queue &queue) final;
 
 private:
-    handle m_stream;
+    cuda_device_event m_event;
+    std::shared_ptr<const host_buffer> m_current;
 
 }; 
 

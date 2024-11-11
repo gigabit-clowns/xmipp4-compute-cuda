@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,70 +21,46 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.cpp
+ * @file cuda_device_memory_allocator.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_queue.hpp
- * @date 2024-10-30
+ * @brief Defines the compute::cuda_device_memory_allocator interface
+ * @date 2024-10-31
  * 
  */
 
-#include "cuda_device_queue.hpp"
+#include <xmipp4/core/compute/device_memory_allocator.hpp>
 
-#include <utility>
-
-namespace xmipp4
+namespace xmipp4 
 {
 namespace compute
 {
 
-cuda_device_queue::cuda_device_queue(int device)
-{
-    cudaSetDevice(device);
-    cudaStreamCreate(&m_stream); // TODO check
-}
+class cuda_device_buffer;
 
-cuda_device_queue::cuda_device_queue(cuda_device_queue &&other) noexcept
-    : m_stream(other.m_stream)
+class cuda_device_memory_allocator
+    : public device_memory_allocator
 {
-    other.m_stream = nullptr;
-}
+public:
+    cuda_device_memory_allocator() = default;
+    cuda_device_memory_allocator(const cuda_device_memory_allocator &other) = default;
+    cuda_device_memory_allocator(cuda_device_memory_allocator &&other) = default;
+    virtual ~cuda_device_memory_allocator() = default;
 
-cuda_device_queue::~cuda_device_queue()
-{
-    reset();
-}
+    cuda_device_memory_allocator&
+    operator=(const cuda_device_memory_allocator &other) = default;
+    cuda_device_memory_allocator&
+    operator=(cuda_device_memory_allocator &&other) = default;
 
-cuda_device_queue& 
-cuda_device_queue::operator=(cuda_device_queue &&other) noexcept
-{
-    swap(other);
-    other.reset();
-    return *this;
-}
+    std::unique_ptr<device_buffer> 
+    create_buffer(numerical_type type, 
+                  std::size_t count, device_queue &queue ) final;
 
-void cuda_device_queue::swap(cuda_device_queue &other) noexcept
-{
-    std::swap(m_stream, other.m_stream);
-}
+    std::shared_ptr<device_buffer> 
+    create_buffer_shared(numerical_type type, 
+                         std::size_t count, 
+                         device_queue &queue ) final;
 
-void cuda_device_queue::reset() noexcept
-{
-    if (m_stream)
-    {
-        cudaStreamDestroy(m_stream);// TODO check
-    }
-}
-
-
-cuda_device_queue::handle cuda_device_queue::get_handle() noexcept
-{
-    return m_stream;
-}
-
-void cuda_device_queue::synchronize() const
-{
-    cudaStreamSynchronize(m_stream);
-}
+}; 
 
 } // namespace compute
 } // namespace xmipp4

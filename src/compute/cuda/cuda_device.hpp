@@ -52,10 +52,25 @@ public:
     std::unique_ptr<device_queue> create_queue() final;
     std::shared_ptr<device_queue> create_queue_shared() final;
 
-    std::unique_ptr<device_buffer> 
-    create_buffer(numerical_type type, std::size_t count) final;
-    std::shared_ptr<device_buffer> 
-    create_buffer_shared(numerical_type type, std::size_t count) final;
+    std::unique_ptr<device_memory_allocator>
+    create_device_memory_allocator() final;
+    std::shared_ptr<device_memory_allocator>
+    create_device_memory_allocator_shared() final;
+
+    std::unique_ptr<host_memory_allocator>
+    create_host_memory_allocator() final;
+    std::shared_ptr<host_memory_allocator>
+    create_host_memory_allocator_shared() final;
+
+    std::unique_ptr<host_to_device_transfer> 
+    create_host_to_device_transfer() final;
+    std::shared_ptr<host_to_device_transfer> 
+    create_host_to_device_transfer_shared() final;
+
+    std::unique_ptr<device_to_host_transfer> 
+    create_device_to_host_transfer() final;
+    std::shared_ptr<device_to_host_transfer> 
+    create_device_to_host_transfer_shared() final;
 
 private:
     int m_device;
