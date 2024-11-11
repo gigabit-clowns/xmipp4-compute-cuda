@@ -66,6 +66,8 @@ jobs:
         id: cuda-toolkit
         with:
           cuda: ${{ matrix.cuda }}
+          method: 'network'
+          sub-packages: '["nvcc", "toolkit"]'
 
       - name: Install xmipp4-core
         id: install-xmipp4-core
