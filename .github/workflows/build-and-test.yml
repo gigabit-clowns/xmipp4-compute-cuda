@@ -38,14 +38,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
-      
-      - name: Free up disk space (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          rm -rf "C:\Program Files\dotnet"
-          rm -rf "C:\Program Files (x86)\Microsoft Visual Studio"
-          rm -rf "C:\Program Files\Microsoft SDKs"
-          rm -rf "C:\Program Files (x86)\Windows Kits"
 
       - uses: Jimver/cuda-toolkit@master
         id: cuda-toolkit
