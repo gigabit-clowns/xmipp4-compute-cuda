@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +19,35 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_host_malloc.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Implementation of cuda_host_malloc.hpp
+ * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include "cuda_host_malloc.hpp"
 
 #include <cuda_runtime.h>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device_queue_backend;
-
-class cuda_device_queue final
-    : public device_queue
+inline
+void* cuda_host_malloc::allocate(std::size_t size)
 {
-public:
-    using handle = cudaStream_t;
+    void* result;
+    cudaMallocHost(&result, size); // TODO check
+    return result;
+}
 
-    cuda_device_queue(int device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    virtual ~cuda_device_queue();
-
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void synchronize() const final;
-
-    std::size_t get_id() const noexcept;
-
-private:
-    handle m_stream;
-
-}; 
+inline
+void cuda_host_malloc::deallocate(void* data, std::size_t)
+{
+    cudaFreeHost(data); // TODO check
+}
 
 } // namespace compute
 } // namespace xmipp4

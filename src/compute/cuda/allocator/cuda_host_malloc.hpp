@@ -21,50 +21,52 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_host_malloc.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Defines cuda_host_malloc class.
+ * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include <cstddef>
 
-#include <cuda_runtime.h>
-
+/**
+ * @brief Wrapper around cudaHostMalloc and cudaHostFree
+ * 
+ */
 namespace xmipp4 
 {
 namespace compute
 {
 
-class cuda_device_queue_backend;
-
-class cuda_device_queue final
-    : public device_queue
+struct cuda_host_malloc
 {
-public:
-    using handle = cudaStream_t;
+    /**
+     * @brief Allocate memory in the host.
+     * 
+     * Allocated memory will be managed by CUDA and thus it
+     * will be pinned. This means that transfers from/to 
+     * devices occur in an efficient manner
+     * 
+     * @param size Number of bytes to be allocated.
+     * @return void* Allocated data.
+     */
+    static void* allocate(std::size_t size);
 
-    cuda_device_queue(int device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    virtual ~cuda_device_queue();
+    /**
+     * @brief Release data.
+     * 
+     * @param data Data to be released. Must have been obtained from a
+     * call to allocate.
+     * @param size Number of bytes to be released. Must be equal to 
+     * the bytes used when calling allocate.
+     * 
+     */
+    static void deallocate(void* data, std::size_t size);
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void synchronize() const final;
-
-    std::size_t get_id() const noexcept;
-
-private:
-    handle m_stream;
-
-}; 
+};
 
 } // namespace compute
 } // namespace xmipp4
+
+#include "cuda_host_malloc.inl"

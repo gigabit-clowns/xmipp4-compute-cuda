@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +19,42 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_device_malloc.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Implementation of cuda_device_malloc.hpp
+ * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include "cuda_device_malloc.hpp"
 
 #include <cuda_runtime.h>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device_queue_backend;
+inline
+cuda_device_malloc::cuda_device_malloc(int device_id) noexcept
+    : m_device_id(device_id)
+{   
+}
 
-class cuda_device_queue final
-    : public device_queue
+inline
+void* cuda_device_malloc::allocate(std::size_t size) const
 {
-public:
-    using handle = cudaStream_t;
+    void* result;
+    cudaSetDevice(m_device_id); // TODO check
+    cudaMalloc(&result, size); // TODO check
+    return result;
+}
 
-    cuda_device_queue(int device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    virtual ~cuda_device_queue();
-
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void synchronize() const final;
-
-    std::size_t get_id() const noexcept;
-
-private:
-    handle m_stream;
-
-}; 
+inline
+void cuda_device_malloc::deallocate(void* data, std::size_t) const
+{
+    cudaFree(data); // TODO check
+}
 
 } // namespace compute
 } // namespace xmipp4
