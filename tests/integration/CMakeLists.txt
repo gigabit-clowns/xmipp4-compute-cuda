@@ -58,6 +58,7 @@ target_link_libraries(
 	${TESTS_NAME} 
 	PRIVATE 
 		xmipp4-core
+		xmipp4-core-black-box-tests
 		Catch2::Catch2WithMain
 )
 add_dependencies(${TESTS_NAME} ${PROJECT_NAME})
