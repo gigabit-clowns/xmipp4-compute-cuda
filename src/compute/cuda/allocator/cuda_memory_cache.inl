@@ -61,18 +61,24 @@ cuda_memory_cache::allocate(Allocator &allocator,
     const cuda_memory_block* result;
 
     memory::align_ceil_inplace(size, m_size_step);
-    if (size < m_small_large_threshold)
+    if (is_small(size))
     {
         result = allocate_from_pool(
-            m_small_block_pool, allocator, 
-            size, queue_id, m_size_step
+            m_small_block_pool,
+            allocator, 
+            size,
+            queue_id,
+            m_size_step
         );
     }
     else
     {   
         result = allocate_from_pool(
-            m_large_block_pool, allocator, 
-            size, queue_id, m_small_large_threshold
+            m_large_block_pool,
+            allocator, 
+            size,
+            queue_id,
+            m_small_large_threshold
         );
     }
 
@@ -82,7 +88,7 @@ cuda_memory_cache::allocate(Allocator &allocator,
 inline
 void cuda_memory_cache::deallocate(const cuda_memory_block &block)
 {
-    if (block.get_size() < m_small_large_threshold)
+    if (is_small(block.get_size()))
     {
         deallocate_block(m_small_block_pool, block);
     }
@@ -106,8 +112,12 @@ cuda_memory_cache::allocate_from_pool(cuda_memory_block_pool &blocks,
     const cuda_memory_block* result;
 
     result = allocate_block(
-        blocks, allocator, 
-        size, queue_id, min_size, m_request_size_step
+        blocks,
+        allocator, 
+        size,
+        queue_id,
+        min_size,
+        m_request_size_step
     );
 
     if(!result)
@@ -115,12 +125,22 @@ cuda_memory_cache::allocate_from_pool(cuda_memory_block_pool &blocks,
         // Retry after freeing space
         release(allocator);
         result = allocate_block(
-            m_small_block_pool, allocator, 
-            size, queue_id, min_size, m_request_size_step
+            m_small_block_pool,
+            allocator, 
+            size,
+            queue_id,
+            min_size,
+            m_request_size_step
         );
     }
 
     return result;
+}
+
+inline
+bool cuda_memory_cache::is_small(std::size_t size) const noexcept
+{
+    return size < m_small_large_threshold;
 }
 
 } // namespace compute
