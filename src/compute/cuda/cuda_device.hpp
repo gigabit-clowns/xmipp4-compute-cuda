@@ -49,6 +49,8 @@ public:
     cuda_device& operator=(const cuda_device &other) = default;
     cuda_device& operator=(cuda_device &&other) = default;
 
+    int get_index() const noexcept;
+
     std::unique_ptr<device_queue> create_queue() override;
     std::shared_ptr<device_queue> create_queue_shared() override;
 

@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,52 +19,39 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_error.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Implementation of cuda_error.hpp
+ * @date 2024-11-17
+ * 
+ * Based on:
+ * https://leimao.github.io/blog/Proper-CUDA-Error-Checking/
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include "cuda_error.hpp"
 
-#include <cuda_runtime.h>
+#include <sstream>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device;
-
-
-
-class cuda_device_queue final
-    : public device_queue
+void cuda_check(cudaError_t code, 
+                const char* call, 
+                const char* file,
+                int line )
 {
-public:
-    using handle = cudaStream_t;
-
-    cuda_device_queue(cuda_device &device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    ~cuda_device_queue() override;
-
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void synchronize() const override;
-
-    std::size_t get_id() const noexcept;
-
-private:
-    handle m_stream;
-
-}; 
+    if (code != cudaSuccess)
+    {
+        std::ostringstream oss;
+        oss << "CUDA Runtime Error at: " << file << ":" << line << std::endl;
+        oss << cudaGetErrorString(code) << " " << call << std::endl;
+        throw cuda_error(oss.str());
+    }
+}
 
 } // namespace compute
 } // namespace xmipp4
+

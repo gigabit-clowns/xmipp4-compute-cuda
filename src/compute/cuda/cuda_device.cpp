@@ -46,14 +46,19 @@ cuda_device::cuda_device(int device)
 {
 }
 
+int cuda_device::get_index() const noexcept
+{
+    return m_device;
+}
+
 std::unique_ptr<device_queue> cuda_device::create_queue()
 {
-    return std::make_unique<cuda_device_queue>(m_device);
+    return std::make_unique<cuda_device_queue>(*this);
 }
 
 std::shared_ptr<device_queue> cuda_device::create_queue_shared()
 {
-    return std::make_shared<cuda_device_queue>(m_device);
+    return std::make_shared<cuda_device_queue>(*this);
 }
 
 std::unique_ptr<device_memory_allocator> 

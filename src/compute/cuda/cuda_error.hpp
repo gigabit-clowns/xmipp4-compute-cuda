@@ -21,14 +21,14 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_error.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Defines a cuda error exception and methods that throw it.
+ * @date 2024-11-17
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include <stdexcept>
 
 #include <cuda_runtime.h>
 
@@ -37,36 +37,35 @@ namespace xmipp4
 namespace compute
 {
 
-class cuda_device;
-
-
-
-class cuda_device_queue final
-    : public device_queue
+/**
+ * @brief Exception class representing a CUDA runtime error.
+ * 
+ */
+class cuda_error
+    : public std::runtime_error
 {
-public:
-    using handle = cudaStream_t;
+    using runtime_error::runtime_error;
+};
 
-    cuda_device_queue(cuda_device &device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    ~cuda_device_queue() override;
+/**
+ * @brief Check CUDA return code and throw an exception on failure.
+ * 
+ * @param code CUDA return code
+ * @param call String identifying the CUDA function call.
+ * @param file File where the error ocurred.
+ * @param line Line where the error ocurred.
+ * 
+ */
+void cuda_check(cudaError_t code, 
+                const char* call, 
+                const char* file,
+                int line );
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void synchronize() const override;
-
-    std::size_t get_id() const noexcept;
-
-private:
-    handle m_stream;
-
-}; 
+/**
+ * @brief Calls cuda_check filling the call name, filename and line number.
+ * 
+ */
+#define XMIPP4_CUDA_CHECK(val) cuda_check((val), #val, __FILE__, __LINE__)
 
 } // namespace compute
 } // namespace xmipp4
