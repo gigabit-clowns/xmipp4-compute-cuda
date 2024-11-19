@@ -19,36 +19,39 @@
  ***************************************************************************/
 
 /**
- * @file cuda_host_malloc.cpp
+ * @file cuda_error.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_host_malloc.hpp
- * @date 2024-11-06
+ * @brief Implementation of cuda_error.hpp
+ * @date 2024-11-17
+ * 
+ * Based on:
+ * https://leimao.github.io/blog/Proper-CUDA-Error-Checking/
  * 
  */
 
-#include "../cuda_error.hpp"
-#include "cuda_host_malloc.hpp"
+#include "cuda_error.hpp"
 
-#include <cuda_runtime.h>
+#include <sstream>
 
 namespace xmipp4
 {
 namespace compute
 {
 
-inline
-void* cuda_host_malloc::allocate(std::size_t size)
+void cuda_check(cudaError_t code, 
+                const char* call, 
+                const char* file,
+                int line )
 {
-    void* result;
-    XMIPP4_CUDA_CHECK( cudaMallocHost(&result, size) );
-    return result;
-}
-
-inline
-void cuda_host_malloc::deallocate(void* data, std::size_t)
-{
-    XMIPP4_CUDA_CHECK( cudaFreeHost(data) );
+    if (code != cudaSuccess)
+    {
+        std::ostringstream oss;
+        oss << "CUDA Runtime Error at: " << file << ":" << line << std::endl;
+        oss << cudaGetErrorString(code) << " " << call << std::endl;
+        throw cuda_error(oss.str());
+    }
 }
 
 } // namespace compute
 } // namespace xmipp4
+
