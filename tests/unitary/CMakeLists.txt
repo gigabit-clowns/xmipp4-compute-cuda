@@ -22,11 +22,8 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-include(CTest)
-include(FetchContent)
-
 # Test excecutable name
-set(TESTS_NAME "${PROJECT_NAME}_integration_tests")
+set(TESTS_NAME "${PROJECT_NAME}_unitary_tests")
 
 # Register all source and header files
 file(
@@ -48,25 +45,19 @@ set_target_properties(
 target_link_libraries(
 	${TESTS_NAME} 
 	PRIVATE 
-		xmipp4-core
+		${PROJECT_NAME} 
 		Catch2::Catch2WithMain
+		trompeloeil::trompeloeil
 )
-add_dependencies(${TESTS_NAME} ${PROJECT_NAME})
 
 # On windows targets, copy the library to the test directory
 if(WIN32)
 	add_custom_command(TARGET ${TESTS_NAME}
 		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:xmipp4-core> "${CMAKE_CURRENT_BINARY_DIR}"
-		COMMENT "Copy xmipp4-core DLL file to ${CMAKE_CURRENT_BINARY_DIR} directory" VERBATIM
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${CMAKE_CURRENT_BINARY_DIR}"
+		COMMENT "Copy DLL file to ${CMAKE_CURRENT_BINARY_DIR} directory" VERBATIM
 	)
 endif()
-
-# Copy the plugin Shared Library
-add_custom_command(TARGET ${TESTS_NAME}
-	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${CMAKE_CURRENT_BINARY_DIR}"
-)
 
 # Discover tests
 catch_discover_tests(${TESTS_NAME})
