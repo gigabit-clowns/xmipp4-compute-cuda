@@ -41,7 +41,7 @@ class cuda_device final
     : public device
 {
 public:
-    cuda_device(int device);
+    explicit cuda_device(int device);
     cuda_device(const cuda_device &other) = default;
     cuda_device(cuda_device &&other) = default;
     ~cuda_device() override = default;
