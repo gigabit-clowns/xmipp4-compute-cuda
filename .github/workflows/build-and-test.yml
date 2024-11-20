@@ -52,7 +52,7 @@ jobs:
         uses: ./.github/composites/install-xmipp4-core
       
       - name: Configure and build with CMake
-        uses: threeal/cmake-action@main
+        uses: threeal/cmake-action@parse-multi-vals-inputs-with-quotation
         with:
           source-dir: ${{ github.workspace }}
           build-dir: "${{ github.workspace }}/build"
