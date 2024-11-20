@@ -19,75 +19,42 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.cpp
+ * @file cuda_device_malloc.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_queue.hpp
- * @date 2024-10-30
+ * @brief Implementation of cuda_device_malloc.hpp
+ * @date 2024-11-06
  * 
  */
 
-#include "cuda_device_queue.hpp"
+#include "../cuda_error.hpp"
+#include "cuda_device_malloc.hpp"
 
-#include <utility>
-#include <functional>
+#include <cuda_runtime.h>
 
 namespace xmipp4
 {
 namespace compute
 {
 
-cuda_device_queue::cuda_device_queue(int device)
-{
-    cudaSetDevice(device);
-    cudaStreamCreate(&m_stream); // TODO check
+inline
+cuda_device_malloc::cuda_device_malloc(int device_id) noexcept
+    : m_device_id(device_id)
+{   
 }
 
-cuda_device_queue::cuda_device_queue(cuda_device_queue &&other) noexcept
-    : m_stream(other.m_stream)
+inline
+void* cuda_device_malloc::allocate(std::size_t size) const
 {
-    other.m_stream = nullptr;
+    void* result;
+    XMIPP4_CUDA_CHECK( cudaSetDevice(m_device_id) );
+    XMIPP4_CUDA_CHECK( cudaMalloc(&result, size) );
+    return result;
 }
 
-cuda_device_queue::~cuda_device_queue()
+inline
+void cuda_device_malloc::deallocate(void* data, std::size_t) const
 {
-    reset();
-}
-
-cuda_device_queue& 
-cuda_device_queue::operator=(cuda_device_queue &&other) noexcept
-{
-    swap(other);
-    other.reset();
-    return *this;
-}
-
-void cuda_device_queue::swap(cuda_device_queue &other) noexcept
-{
-    std::swap(m_stream, other.m_stream);
-}
-
-void cuda_device_queue::reset() noexcept
-{
-    if (m_stream)
-    {
-        cudaStreamDestroy(m_stream);// TODO check
-    }
-}
-
-
-cuda_device_queue::handle cuda_device_queue::get_handle() noexcept
-{
-    return m_stream;
-}
-
-void cuda_device_queue::synchronize() const
-{
-    cudaStreamSynchronize(m_stream);
-}
-
-std::size_t cuda_device_queue::get_id() const noexcept
-{
-    return std::hash<cudaStream_t>()(m_stream);
+    XMIPP4_CUDA_CHECK( cudaFree(data) );
 }
 
 } // namespace compute

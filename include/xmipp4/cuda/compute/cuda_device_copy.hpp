@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,35 +21,38 @@
  ***************************************************************************/
 
 /**
- * @file cuda_host_malloc.cpp
+ * @file cuda_device_copy.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_host_malloc.hpp
- * @date 2024-11-06
+ * @brief Defines the compute::cuda_device_copy class
+ * @date 2024-11-15
  * 
  */
 
-#include "cuda_host_malloc.hpp"
+#include <xmipp4/core/compute/device_copy.hpp>
 
-#include <cuda_runtime.h>
-
-namespace xmipp4
+namespace xmipp4 
 {
 namespace compute
 {
 
-inline
-void* cuda_host_malloc::allocate(std::size_t size)
+/**
+ * @brief CUDA implementation of the buffer copy engine.
+ * 
+ */
+class cuda_device_copy final
+    : public device_copy
 {
-    void* result;
-    cudaMallocHost(&result, size); // TODO check
-    return result;
-}
+public:
+    void copy(const device_buffer &src_buffer,
+              device_buffer &dst_buffer, 
+              device_queue &queue ) override;
 
-inline
-void cuda_host_malloc::deallocate(void* data, std::size_t)
-{
-    cudaFreeHost(data); // TODO check
-}
+    void copy(const device_buffer &src_buffer,
+              device_buffer &dst_buffer,
+              span<const copy_region> regions,
+              device_queue &queue ) override;
+
+}; 
 
 } // namespace compute
 } // namespace xmipp4

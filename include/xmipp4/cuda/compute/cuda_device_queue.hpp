@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,42 +21,52 @@
  ***************************************************************************/
 
 /**
- * @file test_load.cpp
+ * @file cuda_device_queue.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Test that the plugin loads and registers.
+ * @brief Defines cuda_device_queue class.
  * @date 2024-10-30
+ * 
  */
 
+#include <xmipp4/core/compute/device_queue.hpp>
 
-#include <catch2/catch_test_macros.hpp>
+#include <cuda_runtime.h>
 
-#include <xmipp4/core/plugin_manager.hpp>
-#include <xmipp4/core/plugin.hpp>
-#include <xmipp4/core/platform/operating_system.h>
-
-using namespace xmipp4;
-
-
-static std::string get_cuda_plugin_path()
+namespace xmipp4 
 {
-    #if XMIPP4_WINDOWS
-        return "xmipp4-compute-cuda.dll";
-    #elif XMIPP4_LINUX
-        return "./libxmipp4-compute-cuda.so";
-    #elif XMIPP4_APPLE
-        return "./libxmipp4-compute-cuda.dylib";
-    #else
-        #error "Unknown platform"
-    #endif
-}
-
-TEST_CASE( "load and register xmipp4-compute-cuda plugin", "[compute-cuda]" ) 
+namespace compute
 {
-    plugin_manager manager;
 
-    const auto* cuda_plugin = 
-        manager.load_plugin(get_cuda_plugin_path());
+class cuda_device;
 
-    REQUIRE( cuda_plugin != nullptr );
-    REQUIRE( cuda_plugin->get_name() == "xmipp4-compute-cuda" );
-}
+
+
+class cuda_device_queue final
+    : public device_queue
+{
+public:
+    using handle = cudaStream_t;
+
+    explicit cuda_device_queue(cuda_device &device);
+    cuda_device_queue(const cuda_device_queue &other) = delete;
+    cuda_device_queue(cuda_device_queue &&other) noexcept;
+    ~cuda_device_queue() override;
+
+    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
+    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
+
+    void swap(cuda_device_queue &other) noexcept;
+    void reset() noexcept;
+    handle get_handle() noexcept;
+
+    void synchronize() const override;
+
+    std::size_t get_id() const noexcept;
+
+private:
+    handle m_stream;
+
+}; 
+
+} // namespace compute
+} // namespace xmipp4

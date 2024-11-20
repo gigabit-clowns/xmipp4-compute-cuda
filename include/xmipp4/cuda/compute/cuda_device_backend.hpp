@@ -1,3 +1,5 @@
+#pragma once
+
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,42 +21,44 @@
  ***************************************************************************/
 
 /**
- * @file test_load.cpp
+ * @file cuda_device_backend.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Test that the plugin loads and registers.
- * @date 2024-10-30
+ * @brief Defines cuda_device_backend interface
+ * @date 2024-10-31
+ * 
  */
 
+#include <xmipp4/core/compute/device_backend.hpp>
 
-#include <catch2/catch_test_macros.hpp>
-
-#include <xmipp4/core/plugin_manager.hpp>
-#include <xmipp4/core/plugin.hpp>
-#include <xmipp4/core/platform/operating_system.h>
-
-using namespace xmipp4;
-
-
-static std::string get_cuda_plugin_path()
+namespace xmipp4 
 {
-    #if XMIPP4_WINDOWS
-        return "xmipp4-compute-cuda.dll";
-    #elif XMIPP4_LINUX
-        return "./libxmipp4-compute-cuda.so";
-    #elif XMIPP4_APPLE
-        return "./libxmipp4-compute-cuda.dylib";
-    #else
-        #error "Unknown platform"
-    #endif
-}
-
-TEST_CASE( "load and register xmipp4-compute-cuda plugin", "[compute-cuda]" ) 
+namespace compute
 {
-    plugin_manager manager;
 
-    const auto* cuda_plugin = 
-        manager.load_plugin(get_cuda_plugin_path());
+class device_manager;
 
-    REQUIRE( cuda_plugin != nullptr );
-    REQUIRE( cuda_plugin->get_name() == "xmipp4-compute-cuda" );
-}
+
+
+class cuda_device_backend final
+    : public device_backend
+{
+public:
+    const std::string& get_name() const noexcept override;
+    version get_version() const noexcept override;
+    bool is_available() const noexcept override;
+
+    void enumerate_devices(std::vector<std::size_t> &ids) const override;
+    bool get_device_properties(std::size_t id, device_properties &desc) const override;
+
+    std::unique_ptr<device> create_device(std::size_t id) override;
+    std::shared_ptr<device> create_device_shared(std::size_t id) override;
+
+    static bool register_at(device_manager &manager);
+
+private:
+    static const std::string m_name;
+
+}; 
+
+} // namespace compute
+} // namespace xmipp4

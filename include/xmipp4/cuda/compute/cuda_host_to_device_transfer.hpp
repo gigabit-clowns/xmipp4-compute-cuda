@@ -21,16 +21,16 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_to_host_transfer.hpp
+ * @file cuda_host_to_device_transfer.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_to_host_transfer class
+ * @brief Defines the compute::cuda_host_to_device_transfer class
  * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_to_host_transfer.hpp>
+#include <xmipp4/core/compute/host_to_device_transfer.hpp>
 
-#include "cuda_device_event.hpp"
+#include "cuda_event.hpp"
 
 namespace xmipp4 
 {
@@ -39,37 +39,38 @@ namespace compute
 
 
 /**
- * @brief CUDA implementation of the device to host transfer engine.
+ * @brief CUDA implementation of the host to device transfer engine.
  * 
  */
-class cuda_device_to_host_transfer final
-    : public device_to_host_transfer
+class cuda_host_to_device_transfer final
+    : public host_to_device_transfer
 {
 public:
-    void transfer_copy(const device_buffer &src_buffer, 
-                       const std::shared_ptr<host_buffer> &dst_buffer, 
-                       device_queue &queue ) final;
+    void transfer_copy(const std::shared_ptr<const host_buffer> &src_buffer, 
+                       device_buffer &dst_buffer, 
+                       device_queue &queue ) override;
 
-    void transfer_copy(const device_buffer &src_buffer,
-                       const std::shared_ptr<host_buffer> &dst_buffer,
+    void transfer_copy(const std::shared_ptr<const host_buffer> &src_buffer, 
+                       device_buffer &dst_buffer, 
                        span<const copy_region> regions,
-                       device_queue &queue ) final;
+                       device_queue &queue ) override;
 
-    std::shared_ptr<host_buffer> 
-    transfer(const std::shared_ptr<device_buffer> &buffer, 
-             host_memory_allocator &allocator,
-             device_queue &queue ) final;
+    std::shared_ptr<device_buffer> 
+    transfer(const std::shared_ptr<host_buffer> &buffer, 
+             device_memory_allocator &allocator,
+             device_queue &queue ) override;
 
-    std::shared_ptr<const host_buffer> 
-    transfer(const std::shared_ptr<const device_buffer> &buffer, 
-             host_memory_allocator &allocator,
-             device_queue &queue ) final;
+    std::shared_ptr<const device_buffer> 
+    transfer(const std::shared_ptr<const host_buffer> &buffer, 
+             device_memory_allocator &allocator,
+             device_queue &queue ) override;
 
 
-    void wait() final;
+    void wait() override;
+    void wait(device_queue &queue) override;
 
 private:
-    cuda_device_event m_event;
+    cuda_event m_event;
     std::shared_ptr<const host_buffer> m_current;
 
     void update_current(std::shared_ptr<const host_buffer> buffer, 

@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,44 +19,36 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_backend.hpp
+ * @file cuda_host_malloc.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_backend interface
- * @date 2024-10-31
+ * @brief Implementation of cuda_host_malloc.hpp
+ * @date 2024-11-06
  * 
  */
 
-#include <xmipp4/core/compute/device_backend.hpp>
+#include "../cuda_error.hpp"
+#include "cuda_host_malloc.hpp"
 
-namespace xmipp4 
+#include <cuda_runtime.h>
+
+namespace xmipp4
 {
 namespace compute
 {
 
-class device_manager;
-
-
-
-class cuda_device_backend final
-    : public device_backend
+inline
+void* cuda_host_malloc::allocate(std::size_t size)
 {
-public:
-    const std::string& get_name() const noexcept final;
-    version get_version() const noexcept final;
-    bool is_available() const noexcept final;
+    void* result;
+    XMIPP4_CUDA_CHECK( cudaMallocHost(&result, size) );
+    return result;
+}
 
-    void enumerate_devices(std::vector<std::size_t> &ids) const final;
-    bool get_device_properties(std::size_t id, device_properties &desc) const final;
-
-    std::unique_ptr<device> create_device(std::size_t id) final;
-    std::shared_ptr<device> create_device_shared(std::size_t id) final;
-
-    static bool register_at(device_manager &manager);
-
-private:
-    static const std::string m_name;
-
-}; 
+inline
+void cuda_host_malloc::deallocate(void* data, std::size_t)
+{
+    XMIPP4_CUDA_CHECK( cudaFreeHost(data) );
+}
 
 } // namespace compute
 } // namespace xmipp4

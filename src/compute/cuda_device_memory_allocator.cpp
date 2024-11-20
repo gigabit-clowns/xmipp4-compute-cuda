@@ -26,11 +26,13 @@
  * 
  */
 
-#include "cuda_device_memory_allocator.hpp"
+#include <xmipp4/cuda/compute/cuda_device_memory_allocator.hpp>
 
-#include "cuda_device_queue.hpp"
-#include "cuda_device_event.hpp"
 #include "default_cuda_device_buffer.hpp"
+
+#include <xmipp4/cuda/compute/cuda_device.hpp>
+#include <xmipp4/cuda/compute/cuda_device_queue.hpp>
+#include <xmipp4/cuda/compute/cuda_event.hpp>
 
 #include <stdexcept>
 
@@ -41,8 +43,8 @@ namespace xmipp4
 namespace compute
 {
 
-cuda_device_memory_allocator::cuda_device_memory_allocator(int device_id)
-    : m_allocator(device_id)
+cuda_device_memory_allocator::cuda_device_memory_allocator(cuda_device &device)
+    : m_allocator(device.get_index())
 {
 }
 
@@ -51,10 +53,8 @@ cuda_device_memory_allocator::create_buffer(numerical_type type,
                                             std::size_t count,
                                             device_queue &queue )
 {
-    auto &cuda_queue = dynamic_cast<cuda_device_queue&>(queue);
-    const auto &block = allocate(type, count, cuda_queue);
-    return std::make_unique<default_cuda_device_buffer>(
-        type, count, block, *this
+    return create_buffer(
+        type, count, dynamic_cast<cuda_device_queue&>(queue)
     );
 }
 
@@ -63,8 +63,27 @@ cuda_device_memory_allocator::create_buffer_shared(numerical_type type,
                                                    std::size_t count,
                                                    device_queue &queue )
 {
-    auto &cuda_queue = dynamic_cast<cuda_device_queue&>(queue);
-    const auto &block = allocate(type, count, cuda_queue);
+    return create_buffer_shared(
+        type, count, dynamic_cast<cuda_device_queue&>(queue)
+    );
+}
+std::unique_ptr<cuda_device_buffer> 
+cuda_device_memory_allocator::create_buffer(numerical_type type, 
+                                            std::size_t count, 
+                                            cuda_device_queue &queue )
+{
+    const auto &block = allocate(type, count, queue);
+    return std::make_unique<default_cuda_device_buffer>(
+        type, count, block, *this
+    );
+}
+
+std::shared_ptr<cuda_device_buffer> 
+cuda_device_memory_allocator::create_buffer_shared(numerical_type type, 
+                                                   std::size_t count, 
+                                                   cuda_device_queue &queue )
+{
+    const auto &block = allocate(type, count, queue);
     return std::make_shared<default_cuda_device_buffer>(
        type, count, block, *this
     );
@@ -155,7 +174,7 @@ void cuda_device_memory_allocator
             );
         }
 
-        events.front().record(*queue);
+        events.front().signal(*queue);
     }
 }
 

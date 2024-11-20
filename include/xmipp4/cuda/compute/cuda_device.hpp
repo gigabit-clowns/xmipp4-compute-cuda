@@ -41,36 +41,51 @@ class cuda_device final
     : public device
 {
 public:
-    cuda_device(int device);
+    explicit cuda_device(int device);
     cuda_device(const cuda_device &other) = default;
     cuda_device(cuda_device &&other) = default;
-    virtual ~cuda_device() = default;
+    ~cuda_device() override = default;
 
     cuda_device& operator=(const cuda_device &other) = default;
     cuda_device& operator=(cuda_device &&other) = default;
 
-    std::unique_ptr<device_queue> create_queue() final;
-    std::shared_ptr<device_queue> create_queue_shared() final;
+    int get_index() const noexcept;
+
+    std::unique_ptr<device_queue> create_queue() override;
+    std::shared_ptr<device_queue> create_queue_shared() override;
 
     std::unique_ptr<device_memory_allocator>
-    create_device_memory_allocator() final;
+    create_device_memory_allocator() override;
     std::shared_ptr<device_memory_allocator>
-    create_device_memory_allocator_shared() final;
+    create_device_memory_allocator_shared() override;
 
     std::unique_ptr<host_memory_allocator>
-    create_host_memory_allocator() final;
+    create_host_memory_allocator() override;
     std::shared_ptr<host_memory_allocator>
-    create_host_memory_allocator_shared() final;
+    create_host_memory_allocator_shared() override;
 
     std::unique_ptr<host_to_device_transfer> 
-    create_host_to_device_transfer() final;
+    create_host_to_device_transfer() override;
     std::shared_ptr<host_to_device_transfer> 
-    create_host_to_device_transfer_shared() final;
+    create_host_to_device_transfer_shared() override;
 
     std::unique_ptr<device_to_host_transfer> 
-    create_device_to_host_transfer() final;
+    create_device_to_host_transfer() override;
     std::shared_ptr<device_to_host_transfer> 
-    create_device_to_host_transfer_shared() final;
+    create_device_to_host_transfer_shared() override;
+
+    std::unique_ptr<device_copy> 
+    create_device_copy() override;
+    std::shared_ptr<device_copy> 
+    create_device_copy_shared() override;
+
+    std::unique_ptr<device_event> create_device_event() override;
+    std::shared_ptr<device_event> create_device_event_shared() override;
+
+    std::unique_ptr<device_to_host_event> 
+    create_device_to_host_event() override;
+    std::shared_ptr<device_to_host_event> 
+    create_device_to_host_event_shared() override;
 
 private:
     int m_device;

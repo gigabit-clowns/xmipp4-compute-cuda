@@ -43,8 +43,10 @@ namespace xmipp4
 namespace compute
 {
 
+class cuda_device;
 class cuda_device_queue;
-class cuda_device_event;
+class cuda_device_buffer;
+class cuda_event;
 
 
 
@@ -52,10 +54,10 @@ class cuda_device_memory_allocator
     : public device_memory_allocator
 {
 public:
-    explicit cuda_device_memory_allocator(int device_id);
+    explicit cuda_device_memory_allocator(cuda_device &device);
     cuda_device_memory_allocator(const cuda_device_memory_allocator &other) = default;
     cuda_device_memory_allocator(cuda_device_memory_allocator &&other) = default;
-    virtual ~cuda_device_memory_allocator() = default;
+    ~cuda_device_memory_allocator() override = default;
 
     cuda_device_memory_allocator&
     operator=(const cuda_device_memory_allocator &other) = default;
@@ -64,12 +66,23 @@ public:
 
     std::unique_ptr<device_buffer> 
     create_buffer(numerical_type type, 
-                  std::size_t count, device_queue &queue ) final;
+                  std::size_t count, 
+                  device_queue &queue ) override;
 
     std::shared_ptr<device_buffer> 
     create_buffer_shared(numerical_type type, 
                          std::size_t count, 
-                         device_queue &queue ) final;
+                         device_queue &queue ) override;
+
+    std::unique_ptr<cuda_device_buffer> 
+    create_buffer(numerical_type type, 
+                  std::size_t count, 
+                  cuda_device_queue &queue );
+
+    std::shared_ptr<cuda_device_buffer> 
+    create_buffer_shared(numerical_type type, 
+                         std::size_t count, 
+                         cuda_device_queue &queue );
 
     const cuda_memory_block& allocate(numerical_type type, 
                                       std::size_t count,
@@ -78,7 +91,7 @@ public:
                     span<cuda_device_queue*> queues);
 
 private:
-    using event_list = std::forward_list<cuda_device_event>;
+    using event_list = std::forward_list<cuda_event>;
 
     cuda_device_malloc m_allocator;
     cuda_memory_cache m_cache;
