@@ -52,7 +52,7 @@ jobs:
         uses: ./.github/composites/install-xmipp4-core
       
       - name: Configure and build with CMake
-        uses: threeal/cmake-action@main
+        uses: MartinSalinas98/cmake-action@main
         with:
           source-dir: ${{ github.workspace }}
           build-dir: "${{ github.workspace }}/build"
