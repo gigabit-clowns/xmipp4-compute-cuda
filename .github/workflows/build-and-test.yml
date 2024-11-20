@@ -52,6 +52,7 @@ jobs:
         uses: ./.github/composites/install-xmipp4-core
       
       - name: Configure and build with CMake
+        if: runner.os == 'Windows'
         uses: threeal/cmake-action@parse-multi-vals-inputs-with-quotation
         with:
           source-dir: ${{ github.workspace }}
@@ -62,9 +63,11 @@ jobs:
             CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
             xmipp4-core_ROOT=${{ steps.install-xmipp4-core.outputs.xmipp4-core-root }}
             CUDA_TOOLKIT_ROOT_DIR="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8"
+            CMAKE_CUDA_COMPILER="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8\\bin\\nvcc.exe"
           run-build: true
           build-args: --config ${{ env.BUILD_TYPE }}
 
       - name: Run tests
+        if: runner.os == 'Windows'
         working-directory: "${{ github.workspace }}/build"
         run: ctest -C ${{ env.BUILD_TYPE }} -T test --rerun-failed --output-on-failure
