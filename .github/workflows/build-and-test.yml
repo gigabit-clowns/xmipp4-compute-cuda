@@ -51,15 +51,9 @@ jobs:
         id: install-xmipp4-core
         uses: ./.github/composites/install-xmipp4-core
       
-      #- name: Set CUDA path environment variable
-      #  run: |
-      #    CUDA_PATH_ESCAPED=$(echo "${{ steps.cuda-toolkit.outputs.CUDA_PATH }}" | sed 's/\\/\//g' | sed 's/ /\\ /g')
-      #    echo "CUDA PATH: $CUDA_PATH_ESCAPED"
-      #    echo "CUDA_PATH=$CUDA_PATH_ESCAPED" >> $GITHUB_ENV
-      
       - name: Configure and build with CMake
-        if: runner.os != 'Windows'
-        uses: threeal/cmake-action@main
+        if: runner.os == 'Windows'
+        uses: threeal/cmake-action@parse-multi-vals-inputs-with-quotation
         with:
           source-dir: ${{ github.workspace }}
           build-dir: "${{ github.workspace }}/build"
@@ -68,12 +62,13 @@ jobs:
           options: |
             CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
             xmipp4-core_ROOT=${{ steps.install-xmipp4-core.outputs.xmipp4-core-root }}
-            CUDA_TOOLKIT_ROOT_DIR=${{ env.CUDA_PATH }}
-            CMAKE_CUDA_COMPILER=nvcc
+            CUDA_TOOLKIT_ROOT_DIR="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.8"
+            CMAKE_CUDA_COMPILER="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.8/bin/nvcc.exe"
+            -DCUDA_HOST_COMPILER=cl
           run-build: true
           build-args: --config ${{ env.BUILD_TYPE }}
 
       - name: Run tests
-        if: runner.os != 'Windows'
+        if: runner.os == 'Windows'
         working-directory: "${{ github.workspace }}/build"
         run: ctest -C ${{ env.BUILD_TYPE }} -T test --rerun-failed --output-on-failure
