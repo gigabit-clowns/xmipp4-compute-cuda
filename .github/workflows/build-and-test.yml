@@ -58,7 +58,7 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.compiler.c }}
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -Dxmipp4-core_ROOT="${{ steps.install-xmipp4-core.outputs.xmipp4-core-root }}"
+          -Dxmipp4-core_ROOT=${{ steps.install-xmipp4-core.outputs.xmipp4-core-root }}
 
       - name: Build with CMake
         run: |
