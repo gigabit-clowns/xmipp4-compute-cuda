@@ -21,50 +21,47 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_copy.hpp
+ * @file cuda_memory_allocator_delete.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_copy class
- * @date 2024-11-15
+ * @brief Defines the cuda_memory_allocator_delete.hpp class
+ * @date 2024-11-29
  * 
  */
 
-#include <xmipp4/core/compute/device_copy.hpp>
+#include <functional>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device_buffer;
-class cuda_device_queue;
+class cuda_memory_block;
 
-/**
- * @brief CUDA implementation of the buffer copy engine.
- * 
- */
-class cuda_device_copy final
-    : public device_copy
+template <typename Allocator>
+class cuda_memory_allocator_delete
 {
 public:
-    void copy(const device_buffer &src_buffer,
-              device_buffer &dst_buffer, 
-              device_queue &queue ) override;
+    using allocator_type = Allocator;
 
-    void copy_impl(const cuda_device_buffer &src_buffer,
-                   cuda_device_buffer &dst_buffer, 
-                   cuda_device_queue &queue );
+    cuda_memory_allocator_delete() = default;
+    cuda_memory_allocator_delete(allocator_type& allocator) noexcept;
+    cuda_memory_allocator_delete(const cuda_memory_allocator_delete &other) = default;
+    cuda_memory_allocator_delete(cuda_memory_allocator_delete &&other) = default;
+    ~cuda_memory_allocator_delete() = default;
 
-    void copy(const device_buffer &src_buffer,
-              device_buffer &dst_buffer,
-              span<const copy_region> regions,
-              device_queue &queue ) override;
+    cuda_memory_allocator_delete&
+    operator=(const cuda_memory_allocator_delete &other) = default;
+    cuda_memory_allocator_delete&
+    operator=(cuda_memory_allocator_delete &&other) = default;
 
-    void copy_impl(const cuda_device_buffer &src_buffer,
-                   cuda_device_buffer &dst_buffer,
-                   span<const copy_region> regions,
-                   cuda_device_queue &queue );
+    void operator()(const cuda_memory_block *block) const;
 
-}; 
+private:
+    std::reference_wrapper<allocator_type> m_allocator;
+
+};
 
 } // namespace compute
 } // namespace xmipp4
+
+#include "cuda_memory_allocator_delete.inl"

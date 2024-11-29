@@ -26,59 +26,29 @@
  * 
  */
 
-#include "cuda_memory_block_cache.hpp"
+#include "cuda_memory_allocator_delete.hpp"
 
 namespace xmipp4
 {
 namespace compute
 {
 
+template <typename Allocator>
 inline
-cuda_memory_block_cache::cuda_memory_block_cache(std::size_t minimum_size, 
-                                                 std::size_t request_size_step )
-    : m_minimum_size(minimum_size)
-    , m_request_size_step(request_size_step)
+cuda_memory_allocator_delete<Allocator>
+::cuda_memory_allocator_delete(allocator_type& allocator) noexcept
+    : m_allocator(allocator)
 {
 }
 
 template <typename Allocator>
 inline
-void cuda_memory_block_cache::release(Allocator &allocator)
+void cuda_memory_allocator_delete<Allocator>
+::operator()(const cuda_memory_block *block) const
 {
-    m_deferred_blocks.process_pending_free(m_block_pool);
-    release_blocks(m_block_pool, allocator);
-}
-
-template <typename Allocator>
-inline
-cuda_memory_block* 
-cuda_memory_block_cache::allocate(Allocator &allocator, 
-                                  std::size_t size, 
-                                  const cuda_device_queue *queue ) 
-{
-    m_deferred_blocks.process_pending_free(m_block_pool);
-
-    return allocate_block(
-        m_block_pool,
-        allocator, 
-        size,
-        queue,
-        m_minimum_size,
-        m_request_size_step
-    );
-}
-
-inline
-void cuda_memory_block_cache::deallocate(const cuda_memory_block &block)
-{
-    const auto extra_queues = block.get_extra_queues();
-    if (extra_queues.empty())
+    if (block)
     {
-        deallocate_block(m_block_pool, block);
-    }
-    else
-    {
-        m_deferred_blocks.record_events(block, extra_queues);
+        m_allocator.get().deallocate(*block);
     }
 }
 
