@@ -29,7 +29,7 @@
  */
 
 #include "allocator/cuda_device_malloc.hpp"
-#include "allocator/cuda_memory_cache.hpp"
+#include "allocator/cuda_caching_memory_allocator.hpp"
 
 #include <xmipp4/core/compute/device_memory_allocator.hpp>
 #include <xmipp4/core/span.hpp>
@@ -48,61 +48,48 @@ class cuda_device_queue;
 class cuda_device_buffer;
 class cuda_event;
 
-
-
 class cuda_device_memory_allocator
     : public device_memory_allocator
 {
 public:
     explicit cuda_device_memory_allocator(cuda_device &device);
-    cuda_device_memory_allocator(const cuda_device_memory_allocator &other) = default;
+    cuda_device_memory_allocator(const cuda_device_memory_allocator &other) = delete;
     cuda_device_memory_allocator(cuda_device_memory_allocator &&other) = default;
     ~cuda_device_memory_allocator() override = default;
 
     cuda_device_memory_allocator&
-    operator=(const cuda_device_memory_allocator &other) = default;
+    operator=(const cuda_device_memory_allocator &other) = delete;
     cuda_device_memory_allocator&
     operator=(cuda_device_memory_allocator &&other) = default;
 
     std::unique_ptr<device_buffer> 
-    create_buffer(numerical_type type, 
-                  std::size_t count, 
-                  device_queue &queue ) override;
-
-    std::shared_ptr<device_buffer> 
-    create_buffer_shared(numerical_type type, 
-                         std::size_t count, 
+    create_device_buffer(std::size_t size,
+                         std::size_t alignment,
                          device_queue &queue ) override;
 
     std::unique_ptr<cuda_device_buffer> 
-    create_buffer(numerical_type type, 
-                  std::size_t count, 
-                  cuda_device_queue &queue );
-
-    std::shared_ptr<cuda_device_buffer> 
-    create_buffer_shared(numerical_type type, 
-                         std::size_t count, 
+    create_device_buffer(std::size_t size,
+                         std::size_t alignment,
                          cuda_device_queue &queue );
 
-    const cuda_memory_block& allocate(numerical_type type, 
-                                      std::size_t count,
-                                      cuda_device_queue &queue );
-    void deallocate(const cuda_memory_block &block,
-                    span<cuda_device_queue*> queues);
+    std::shared_ptr<device_buffer> 
+    create_device_buffer_shared(std::size_t size,
+                                std::size_t alignment,
+                                device_queue &queue ) override;
+
+    std::shared_ptr<cuda_device_buffer> 
+    create_device_buffer_shared(std::size_t size,
+                                std::size_t alignment,
+                                cuda_device_queue &queue );
+
+    const cuda_memory_block& allocate(std::size_t size,
+                                      std::size_t alignment,
+                                      cuda_device_queue *queue,
+                                      cuda_memory_block_usage_tracker **usage_tracker );
+    void deallocate(const cuda_memory_block &block);
 
 private:
-    using event_list = std::forward_list<cuda_event>;
-
-    cuda_device_malloc m_allocator;
-    cuda_memory_cache m_cache;
-    event_list m_event_pool;
-    std::map<cuda_memory_block, event_list, cuda_memory_block_less> m_pending_free;
-    
-
-    void process_pending_free();
-    void record_events(const cuda_memory_block &block,
-                       span<cuda_device_queue*> other_queues );
-    void pop_completed_events(event_list &events);
+    cuda_caching_memory_allocator<cuda_device_malloc> m_allocator;
 
 }; 
 
