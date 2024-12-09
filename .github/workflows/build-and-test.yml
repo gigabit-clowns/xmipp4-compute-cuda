@@ -44,8 +44,8 @@ jobs:
         with:
           cuda: ${{ matrix.cuda }}
           method: 'network'
-          sub-packages: '["nvcc"]'
-          non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
+          #sub-packages: '["nvcc"]'
+          #non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
 
       - name: Install xmipp4-core
         id: install-xmipp4-core
@@ -58,7 +58,6 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.compiler.c }}
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DCMAKE_GENERATOR_TOOLSET="cuda=${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           -Dxmipp4-core_ROOT="${{ steps.install-xmipp4-core.outputs.xmipp4-core-root }}"
 
       - name: Build with CMake
