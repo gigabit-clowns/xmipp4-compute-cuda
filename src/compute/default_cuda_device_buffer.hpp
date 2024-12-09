@@ -29,8 +29,9 @@
  */
 
 #include <xmipp4/cuda/compute/cuda_device_buffer.hpp>
+#include <xmipp4/cuda/compute/allocator/cuda_memory_allocator_delete.hpp>
 
-#include <vector>
+#include <memory>
 
 namespace xmipp4 
 {
@@ -38,46 +39,54 @@ namespace compute
 {
 
 class cuda_memory_block;
-class cuda_device_memory_allocator;
 class cuda_device_queue;
-
+class cuda_memory_block_usage_tracker;
+class cuda_device_memory_allocator;
 
 
 class default_cuda_device_buffer final
     : public cuda_device_buffer
 {
 public:
-    default_cuda_device_buffer() noexcept;
-    default_cuda_device_buffer(numerical_type type,
-                               std::size_t count,
-                               const cuda_memory_block &block , 
-                               cuda_device_memory_allocator &allocator ) noexcept;
+    default_cuda_device_buffer(std::size_t size,
+                             std::size_t alignment,
+                             cuda_device_queue *queue,
+                             cuda_device_memory_allocator &allocator ) noexcept;
     default_cuda_device_buffer(const default_cuda_device_buffer &other) = delete;
-    default_cuda_device_buffer(default_cuda_device_buffer &&other) noexcept;
-    ~default_cuda_device_buffer() override;
+    default_cuda_device_buffer(default_cuda_device_buffer &&other) = default;
+    ~default_cuda_device_buffer() override = default;
 
     default_cuda_device_buffer& 
     operator=(const default_cuda_device_buffer &other) = delete;
     default_cuda_device_buffer& 
-    operator=(default_cuda_device_buffer &&other) noexcept;
+    operator=(default_cuda_device_buffer &&other) = default;
 
-    void swap(default_cuda_device_buffer &other) noexcept;
-    void reset() noexcept;
 
-    numerical_type get_type() const noexcept override;
-    std::size_t get_count() const noexcept override;
+    std::size_t get_size() const noexcept override;
 
     void* get_data() noexcept override;
     const void* get_data() const noexcept override;
 
+    host_buffer* get_host_accessible_alias() noexcept override;
+    const host_buffer* get_host_accessible_alias() const noexcept override;
+
+    void record_queue(device_queue &queue) override;
     void record_queue(cuda_device_queue &queue);
 
 private:
-    numerical_type m_type;
-    std::size_t m_count;
-    const cuda_memory_block *m_block;
-    cuda_device_memory_allocator *m_allocator;
-    std::vector<cuda_device_queue*> m_queues;
+    using block_delete = 
+        cuda_memory_allocator_delete<cuda_device_memory_allocator>;
+
+    std::size_t m_size;
+    cuda_memory_block_usage_tracker *m_usage_tracker;
+    std::unique_ptr<const cuda_memory_block, block_delete> m_block;
+
+    static std::unique_ptr<const cuda_memory_block, block_delete>
+    allocate(std::size_t size,
+             std::size_t alignment,
+             cuda_device_queue *queue,
+             cuda_device_memory_allocator &allocator,
+             cuda_memory_block_usage_tracker **usage_tracker );
 
 }; 
 

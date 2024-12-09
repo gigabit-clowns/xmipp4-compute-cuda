@@ -30,55 +30,115 @@
 
 #include "default_cuda_host_buffer.hpp"
 
-#include <stdexcept>
-
-#include <cuda_runtime.h>
+#include <xmipp4/cuda/compute/cuda_device_queue.hpp>
 
 namespace xmipp4
 {
 namespace compute
 {
 
-std::unique_ptr<host_buffer> 
-cuda_host_memory_allocator::create_buffer(numerical_type type, 
-                                          std::size_t count )
+XMIPP4_CONST_CONSTEXPR
+std::size_t XMIPP4_CUDA_HOST_MEMORY_REQUEST_ROUND_STEP = 512;
+XMIPP4_CONST_CONSTEXPR
+std::size_t XMIPP4_CUDA_HOST_MEMORY_ALLOCATE_ROUND_STEP = 2<<20; // 2MB
+
+cuda_host_memory_allocator::cuda_host_memory_allocator()
+    : m_allocator(
+        {}, 
+        XMIPP4_CUDA_HOST_MEMORY_REQUEST_ROUND_STEP, 
+        XMIPP4_CUDA_HOST_MEMORY_ALLOCATE_ROUND_STEP
+    )
 {
-    const auto &block = allocate(type, count);
+}
+
+std::unique_ptr<host_buffer> 
+cuda_host_memory_allocator::create_host_buffer(std::size_t size, 
+                                               std::size_t alignment,
+                                               device_queue &queue )
+{
+    return create_host_buffer(
+        size,
+        alignment,
+        dynamic_cast<cuda_device_queue&>(queue)
+    );
+}
+
+std::unique_ptr<host_buffer> 
+cuda_host_memory_allocator::create_host_buffer(std::size_t size, 
+                                               std::size_t alignment,
+                                               cuda_device_queue &queue )
+{
     return std::make_unique<default_cuda_host_buffer>(
-        type, count, block, *this
+        size, 
+        alignment, 
+        &queue, 
+        *this
     );
 }
 
 std::shared_ptr<host_buffer> 
-cuda_host_memory_allocator::create_buffer_shared(numerical_type type, 
-                                                 std::size_t count )
+cuda_host_memory_allocator::create_host_buffer_shared(std::size_t size, 
+                                                      std::size_t alignment,
+                                                      device_queue &queue )
 {
-    const auto &block = allocate(type, count);
-    return std::make_shared<default_cuda_host_buffer>(
-        type, count, block, *this
+    return create_host_buffer_shared(
+        size,
+        alignment, 
+        dynamic_cast<cuda_device_queue&>(queue)
     );
 }
 
-const cuda_memory_block&
-cuda_host_memory_allocator::allocate(numerical_type type, std::size_t count)
+std::shared_ptr<host_buffer> 
+cuda_host_memory_allocator::create_host_buffer_shared(std::size_t size, 
+                                                      std::size_t alignment,
+                                                      cuda_device_queue &queue )
+{
+    return std::make_shared<default_cuda_host_buffer>(
+        size, 
+        alignment, 
+        &queue, 
+        *this
+    );
+}
+
+std::unique_ptr<host_buffer> 
+cuda_host_memory_allocator::create_host_buffer(std::size_t size, 
+                                               std::size_t alignment )
+{
+    return std::make_unique<default_cuda_host_buffer>(
+        size, 
+        alignment, 
+        nullptr,
+        *this
+    );
+}
+
+std::shared_ptr<host_buffer> 
+cuda_host_memory_allocator::create_host_buffer_shared(std::size_t size, 
+                                                      std::size_t alignment )
+{
+    return std::make_shared<default_cuda_host_buffer>(
+        size, 
+        alignment, 
+        nullptr,
+        *this
+    );
+}
+
+const cuda_memory_block& 
+cuda_host_memory_allocator::allocate(std::size_t size,
+                                     std::size_t alignment,
+                                     cuda_device_queue *queue,
+                                     cuda_memory_block_usage_tracker **usage_tracker )
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-
-    const auto size = count * get_size(type);
-    const auto *block = m_cache.allocate(m_allocator, size, 0);
-
-    if(!block)
-    {
-        throw std::bad_alloc();
-    }
-
-    return *block;
+    return m_allocator.allocate(size, alignment, queue, usage_tracker);
 }
 
 void cuda_host_memory_allocator::deallocate(const cuda_memory_block &block)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    m_cache.deallocate(block);
+    m_allocator.deallocate(block);
 }
 
 } // namespace compute

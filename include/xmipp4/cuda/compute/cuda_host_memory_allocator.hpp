@@ -29,10 +29,9 @@
  */
 
 #include "allocator/cuda_host_malloc.hpp"
-#include "allocator/cuda_memory_cache.hpp"
+#include "allocator/cuda_caching_memory_allocator.hpp"
 
 #include <xmipp4/core/compute/host_memory_allocator.hpp>
-#include <xmipp4/core/platform/attributes.hpp>
 
 #include <mutex>
 
@@ -41,11 +40,13 @@ namespace xmipp4
 namespace compute
 {
 
+class cuda_device_queue;
+
 class cuda_host_memory_allocator
     : public host_memory_allocator
 {
 public:
-    cuda_host_memory_allocator() = default;
+    cuda_host_memory_allocator();
     cuda_host_memory_allocator(const cuda_host_memory_allocator &other) = delete;
     cuda_host_memory_allocator(cuda_host_memory_allocator &&other) = delete;
     ~cuda_host_memory_allocator() override = default;
@@ -56,19 +57,39 @@ public:
     operator=(cuda_host_memory_allocator &&other) = delete;
 
     std::unique_ptr<host_buffer> 
-    create_buffer(numerical_type type, 
-                  std::size_t count ) override;
+    create_host_buffer(std::size_t size,
+                       std::size_t alignment, 
+                       device_queue &queue ) override;
+
+    std::unique_ptr<host_buffer> 
+    create_host_buffer(std::size_t size,
+                       std::size_t alignment, 
+                       cuda_device_queue &queue );
 
     std::shared_ptr<host_buffer> 
-    create_buffer_shared(numerical_type type, 
-                         std::size_t count ) override;
+    create_host_buffer_shared(std::size_t size,
+                              std::size_t alignment, 
+                              device_queue &queue ) override;
+
+    std::shared_ptr<host_buffer> 
+    create_host_buffer_shared(std::size_t size,
+                              std::size_t alignment, 
+                              cuda_device_queue &queue );
+
+    std::unique_ptr<host_buffer> 
+    create_host_buffer(std::size_t size, std::size_t alignment) override;
+
+    std::shared_ptr<host_buffer> 
+    create_host_buffer_shared(std::size_t size, std::size_t alignment) override;
     
-    const cuda_memory_block& allocate(numerical_type type, std::size_t count);
+    const cuda_memory_block& allocate(std::size_t size,
+                                      std::size_t alignment,
+                                      cuda_device_queue *queue,
+                                      cuda_memory_block_usage_tracker **usage_tracker );
     void deallocate(const cuda_memory_block &block);
 
 private:
-    XMIPP4_NO_UNIQUE_ADDRESS cuda_host_malloc m_allocator;
-    cuda_memory_cache m_cache;
+    cuda_caching_memory_allocator<cuda_host_malloc> m_allocator;
     std::mutex m_mutex;
 
 }; 

@@ -32,12 +32,16 @@
 #include <xmipp4/cuda/compute/cuda_device.hpp>
 
 #include <utility>
-#include <functional>
 
 namespace xmipp4
 {
 namespace compute
 {
+
+cuda_device_queue::cuda_device_queue()
+{
+    XMIPP4_CUDA_CHECK( cudaStreamCreate(&m_stream) );
+}
 
 cuda_device_queue::cuda_device_queue(cuda_device &device)
 {
@@ -88,9 +92,27 @@ void cuda_device_queue::wait_until_completed() const
     XMIPP4_CUDA_CHECK( cudaStreamSynchronize(m_stream) );
 }
 
-std::size_t cuda_device_queue::get_id() const noexcept
+bool cuda_device_queue::is_idle() const noexcept
 {
-    return std::hash<cudaStream_t>()(m_stream);
+    const auto code = cudaStreamQuery(m_stream);
+
+    bool result;
+    switch (code)
+    {
+    case cudaSuccess:
+        result = true;
+        break;
+
+    case cudaErrorNotReady:
+        result = false;
+        break;
+    
+    default:
+        XMIPP4_CUDA_CHECK(code);
+        result = false; // To avoid warnings. The above line should throw.
+        break;
+    }
+    return result;
 }
 
 } // namespace compute

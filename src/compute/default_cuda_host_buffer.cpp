@@ -29,95 +29,28 @@
 #include "default_cuda_host_buffer.hpp"
 
 #include <xmipp4/cuda/compute/allocator/cuda_memory_block.hpp>
+#include <xmipp4/cuda/compute/allocator/cuda_memory_block_usage_tracker.hpp>
+#include <xmipp4/cuda/compute/cuda_device_queue.hpp>
 #include <xmipp4/cuda/compute/cuda_host_memory_allocator.hpp>
-
-#include <xmipp4/core/platform/assert.hpp>
-
-#include <cuda_runtime.h>
 
 namespace xmipp4
 {
 namespace compute
 {
 
-
-default_cuda_host_buffer::default_cuda_host_buffer() noexcept
-    : m_type(numerical_type::unknown)
-    , m_count(0)
-    , m_block(nullptr)
-    , m_allocator(nullptr)
-{
-}
-
 default_cuda_host_buffer
-::default_cuda_host_buffer(numerical_type type,
-                           std::size_t count,
-                           const cuda_memory_block &block , 
+::default_cuda_host_buffer(std::size_t size,
+                           std::size_t alignment,
+                           cuda_device_queue *queue,
                            cuda_host_memory_allocator &allocator) noexcept
-    : m_type(type)
-    , m_count(count)
-    , m_block(&block)
-    , m_allocator(&allocator)
+    : m_size(size)
+    , m_block(allocate(size, alignment, queue, allocator, &m_usage_tracker))
 {
 }
 
-default_cuda_host_buffer
-::default_cuda_host_buffer(default_cuda_host_buffer &&other) noexcept
-    : m_type(other.m_type)
-    , m_count(other.m_count)
-    , m_block(other.m_block)
-    , m_allocator(other.m_allocator)
+std::size_t default_cuda_host_buffer::get_size() const noexcept
 {
-    other.m_type = numerical_type::unknown;
-    other.m_count = 0UL;
-    other.m_block = nullptr;
-    other.m_allocator = nullptr;
-}
-
-default_cuda_host_buffer::~default_cuda_host_buffer()
-{
-    reset();
-}
-
-default_cuda_host_buffer& 
-default_cuda_host_buffer::operator=(default_cuda_host_buffer &&other) noexcept
-{
-    swap(other);
-    other.reset();
-    return *this;
-}
-
-void default_cuda_host_buffer::swap(default_cuda_host_buffer &other) noexcept
-{
-    std::swap(m_type, other.m_type);
-    std::swap(m_count, other.m_count);
-    std::swap(m_block, other.m_block);
-    std::swap(m_allocator, other.m_allocator);
-
-}
-
-void default_cuda_host_buffer::reset() noexcept
-{
-    if (m_block)
-    {
-        XMIPP4_ASSERT(m_allocator);
-        m_allocator->deallocate(*m_block);
-
-        m_type = numerical_type::unknown;
-        m_count = 0UL;
-        m_block = nullptr;
-        m_allocator = nullptr;
-    }
-}
-
-numerical_type default_cuda_host_buffer::get_type() const noexcept
-{
-    return m_type;
-}
-
-std::size_t default_cuda_host_buffer::get_count() const noexcept
-{
-    return m_count;
+    return m_size;
 }
 
 void* default_cuda_host_buffer::get_data() noexcept
@@ -128,6 +61,48 @@ void* default_cuda_host_buffer::get_data() noexcept
 const void* default_cuda_host_buffer::get_data() const noexcept
 {
     return m_block ? m_block->get_data() : nullptr;
+}
+
+device_buffer* default_cuda_host_buffer::get_device_accessible_alias() noexcept
+{
+    return nullptr;
+}
+
+const device_buffer* 
+default_cuda_host_buffer::get_device_accessible_alias() const noexcept
+{
+    return nullptr;
+}
+void default_cuda_host_buffer::record_queue(device_queue &queue)
+{
+    record_queue(dynamic_cast<cuda_device_queue&>(queue));
+}
+
+void default_cuda_host_buffer::record_queue(cuda_device_queue &queue)
+{
+    m_usage_tracker->add_queue(*m_block, queue);
+}
+
+
+
+std::unique_ptr<const cuda_memory_block, default_cuda_host_buffer::block_delete>
+default_cuda_host_buffer::allocate(std::size_t size,
+                                   std::size_t alignment,
+                                   cuda_device_queue *queue,
+                                   cuda_host_memory_allocator &allocator,
+                                   cuda_memory_block_usage_tracker **usage_tracker )
+{
+    const auto &block = allocator.allocate(
+        size, 
+        alignment, 
+        queue, 
+        usage_tracker
+    );
+
+    return std::unique_ptr<const cuda_memory_block, block_delete>(
+        &block,
+        block_delete(allocator)
+    );
 }
 
 } // namespace compute

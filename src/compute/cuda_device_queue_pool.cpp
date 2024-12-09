@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +19,40 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_device_queue.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Implementation of cuda_device_queue.hpp
+ * @date 2024-11-27
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include <xmipp4/cuda/compute/cuda_device_queue_pool.hpp>
+
+#include <xmipp4/cuda/compute/cuda_error.hpp>
+#include <xmipp4/cuda/compute/cuda_device.hpp>
 
 #include <cuda_runtime.h>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device;
-
-class cuda_device_queue final
-    : public device_queue
+cuda_device_queue_pool::cuda_device_queue_pool(int device_index, std::size_t count)
 {
-public:
-    using handle = cudaStream_t;
+    XMIPP4_CUDA_CHECK( cudaSetDevice(device_index) );
+    m_queues.resize(count);
+}
 
-    cuda_device_queue();
-    explicit cuda_device_queue(cuda_device &device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    ~cuda_device_queue() override;
+std::size_t cuda_device_queue_pool::get_size() const noexcept
+{
+    return m_queues.size();
+}
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void wait_until_completed() const override;
-    bool is_idle() const noexcept override;
-
-private:
-    handle m_stream;
-
-}; 
+cuda_device_queue& cuda_device_queue_pool::get_queue(std::size_t index)
+{
+    return m_queues.at(index);
+}
 
 } // namespace compute
 } // namespace xmipp4

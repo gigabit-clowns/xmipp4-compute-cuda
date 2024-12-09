@@ -23,46 +23,46 @@
 /**
  * @file cuda_device_queue.hpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Defines cuda_device_queue interface
+ * @date 2024-11-27
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include <xmipp4/core/compute/device_queue_pool.hpp>
 
-#include <cuda_runtime.h>
+#include "cuda_device_queue.hpp"
+
+#include <vector>
 
 namespace xmipp4 
 {
 namespace compute
 {
 
-class cuda_device;
-
-class cuda_device_queue final
-    : public device_queue
+/**
+ * @brief Implementation of the device_queue_pool interface to be 
+ * able to obtain cuda_device_queue-s.
+ * 
+ */
+class cuda_device_queue_pool final
+    : public device_queue_pool
 {
 public:
-    using handle = cudaStream_t;
+    cuda_device_queue_pool(int device_index, std::size_t count);
+    cuda_device_queue_pool(const cuda_device_queue_pool &other) = delete;
+    cuda_device_queue_pool(cuda_device_queue_pool &&other) = default;
+    ~cuda_device_queue_pool() override = default;
 
-    cuda_device_queue();
-    explicit cuda_device_queue(cuda_device &device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    ~cuda_device_queue() override;
+    cuda_device_queue_pool&
+    operator=(const cuda_device_queue_pool &other) = delete;
+    cuda_device_queue_pool&
+    operator=(cuda_device_queue_pool &&other) = default;
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
-
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void wait_until_completed() const override;
-    bool is_idle() const noexcept override;
+    std::size_t get_size() const noexcept override;
+    cuda_device_queue& get_queue(std::size_t index) override;
 
 private:
-    handle m_stream;
+    std::vector<cuda_device_queue> m_queues;
 
 }; 
 

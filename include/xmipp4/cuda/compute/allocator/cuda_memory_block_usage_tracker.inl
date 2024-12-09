@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +19,55 @@
  ***************************************************************************/
 
 /**
- * @file cuda_device_queue.hpp
+ * @file cuda_memory_block_usage_tracker.cpp
  * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_queue class.
- * @date 2024-10-30
+ * @brief Implementation of cuda_memory_block_usage_tracker.hpp
+ * @date 2024-11-30
  * 
  */
 
-#include <xmipp4/core/compute/device_queue.hpp>
+#include "cuda_memory_block_usage_tracker.hpp"
 
-#include <cuda_runtime.h>
+#include <algorithm>
 
-namespace xmipp4 
+namespace xmipp4
 {
 namespace compute
 {
 
-class cuda_device;
-
-class cuda_device_queue final
-    : public device_queue
+inline
+void cuda_memory_block_usage_tracker::reset() noexcept
 {
-public:
-    using handle = cudaStream_t;
+    m_queues.clear();
+}
 
-    cuda_device_queue();
-    explicit cuda_device_queue(cuda_device &device);
-    cuda_device_queue(const cuda_device_queue &other) = delete;
-    cuda_device_queue(cuda_device_queue &&other) noexcept;
-    ~cuda_device_queue() override;
+inline
+void cuda_memory_block_usage_tracker::add_queue(const cuda_memory_block &block,
+                                                cuda_device_queue &queue )
+{
+    auto *const queue_pointer = &queue;
+    if (queue_pointer != block.get_queue())
+    {
+        // Find first element that compares greater or EQUAL.
+        const auto pos = std::lower_bound(
+            m_queues.cbegin(), m_queues.cend(),
+            queue_pointer
+        );
 
-    cuda_device_queue& operator=(const cuda_device_queue &other) = delete;
-    cuda_device_queue& operator=(cuda_device_queue &&other) noexcept;
+        // Ensure that it is not equal.
+        if (pos != m_queues.cend() && *pos != queue_pointer)
+        {
+            m_queues.insert(pos, queue_pointer);
+        }
+    }
+}
 
-    void swap(cuda_device_queue &other) noexcept;
-    void reset() noexcept;
-    handle get_handle() noexcept;
-
-    void wait_until_completed() const override;
-    bool is_idle() const noexcept override;
-
-private:
-    handle m_stream;
-
-}; 
+inline
+span<cuda_device_queue *const> 
+cuda_memory_block_usage_tracker::get_queues() const noexcept
+{
+    return make_span(m_queues);
+}
 
 } // namespace compute
 } // namespace xmipp4
