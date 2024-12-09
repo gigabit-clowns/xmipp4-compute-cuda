@@ -44,7 +44,6 @@ jobs:
         with:
           cuda: ${{ matrix.cuda }}
           method: 'network'
-          sub-packages: '["nvcc", "visual_studio_integration"]'
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
 
       - name: Install xmipp4-core
