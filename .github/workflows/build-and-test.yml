@@ -19,7 +19,8 @@ jobs:
         compiler: 
         - {cc: gcc, cxx: g++}
         - {cc: clang, cxx: clang++}
-        cuda: 12.8.1
+        cuda:
+        - 12.8.1
         
         include:
         - os: ubuntu-22.04
@@ -36,12 +37,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Set gcc with alternatives 
-        if: ${{matrix.compiler.update-alternatives}}
-        run: |
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/${{ matrix.compiler.cc }} 128
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/${{ matrix.compiler.cxx }} 128
 
       - uses: Jimver/cuda-toolkit@v0.2.22
         id: cuda-toolkit
