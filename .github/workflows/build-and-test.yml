@@ -14,7 +14,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ubuntu-latest
+        os:
+        - ubuntu-latest
         compiler: 
         - {cc: gcc, cxx: g++}
         - {cc: clang, cxx: clang++}
