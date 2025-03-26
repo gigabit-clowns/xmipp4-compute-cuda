@@ -20,13 +20,13 @@ jobs:
         - {cc: gcc, cxx: g++}
         - {cc: clang, cxx: clang++}
         cuda:
-        - '11.8.0'
-        - '12.8.1'
+        - 11.8.0
+        - 12.8.1
         
         include:
         - os: windows-latest
           compiler: {cc: cl, cxx: cl}
-          cuda: '12.8.1'
+          cuda: 12.8.1
   
     runs-on: ${{ matrix.os }}
     defaults:
