@@ -20,13 +20,13 @@ jobs:
         - {cc: gcc, cxx: g++}
         - {cc: clang, cxx: clang++}
         cuda:
-        - 11.8.0
-        - 12.8.1
+        - {version: 11.8.0, method: local}
+        - {version: 12.8.1, method: network}
         
         include:
         - os: windows-latest
           compiler: {cc: cl, cxx: cl}
-          cuda: 12.8.1
+          cuda: {version: 12.8.1, method: network}
   
     runs-on: ${{ matrix.os }}
     defaults:
@@ -39,10 +39,10 @@ jobs:
       - uses: Jimver/cuda-toolkit@v0.2.22
         id: cuda-toolkit
         with:
-          cuda: ${{ matrix.cuda }}
-          method: 'network'
+          cuda: ${{ matrix.cuda.version }}
+          method: ${{ matrix.cuda.method }}
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
-          log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
+          log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda.version}}.txt'
 
       - name: Install xmipp4-core
         id: install-xmipp4-core
