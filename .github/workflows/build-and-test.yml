@@ -41,7 +41,7 @@ jobs:
         with:
           cuda: ${{ matrix.cuda }}
           method: 'network'
-          sub-packages: '["nvcc", "toolkit"]'
+          sub-packages: ${{ matrix.os!='windows' && '["nvcc", "toolkit"]' || '[]' }} # Fake ternary operator
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
 
