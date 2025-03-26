@@ -43,6 +43,7 @@ jobs:
           method: ${{ matrix.cuda.method }}
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda.version}}.txt'
+          linux-local-args: '["--toolkit"]'
 
       - name: Install xmipp4-core
         id: install-xmipp4-core
