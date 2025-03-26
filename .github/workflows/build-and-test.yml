@@ -41,6 +41,7 @@ jobs:
         with:
           cuda: ${{ matrix.cuda }}
           method: 'network'
+          sub-packages: '["nvcc", "toolkit"]'
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
 
