@@ -31,7 +31,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.2
         env:
           CIBW_ARCHS: "x86_64"
-          CIBW_ENVIRONMENT: "CUDA_HOME=/usr/local/cuda"
           CIBW_BUILD: "cp313-*" # Python agnostic, pick any version
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_ALL: |
@@ -39,7 +38,7 @@ jobs:
             wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
-            ls /usr/local/
+            export PATH=$PATH:/usr/local/cuda/bin
           CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
             pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
           CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
