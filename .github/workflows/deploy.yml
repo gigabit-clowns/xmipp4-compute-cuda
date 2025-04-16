@@ -13,7 +13,7 @@ env:
     "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
 
 jobs:
-  build_wheel_linux_x86_64:
+  build_wheel_manylinux_x86_64:
     name: Build wheels for linux-x86_64 ${{ matrix.name }}
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels-linux-x86_64-${{ matrix.name }}
+          name: cibw-wheels-manylinux-x86_64-${{ matrix.name }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
