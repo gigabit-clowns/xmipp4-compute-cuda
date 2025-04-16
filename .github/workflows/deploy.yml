@@ -10,6 +10,7 @@ on:
 
 env:
   RHEL8_NVIDIA_REPO: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
+  RHEL8_NVIDIA_GPGKEY: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/D42D0685.pub"
 
 jobs:
   build_wheel_manylinux_x86_64:
@@ -38,6 +39,7 @@ jobs:
           CIBW_BEFORE_ALL: | # Based on: https://stackoverflow.com/a/77212119
             yum install -y wget
             wget ${{ env.RHEL8_NVIDIA_REPO }} -O /etc/yum.repos.d/cuda.repo
+            rpm --import ${{ env.RHEL8_NVIDIA_GPGKEY }}
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
           CIBW_ENVIRONMENT: |
