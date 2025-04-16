@@ -9,8 +9,7 @@ on:
   pull_request:
 
 env:
-  RHEL8_NVIDIA_REPO: > 
-    "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
+  RHEL8_NVIDIA_REPO: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
 
 jobs:
   build_wheel_manylinux_x86_64:
