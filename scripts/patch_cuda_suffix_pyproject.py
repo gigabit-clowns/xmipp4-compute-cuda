@@ -2,12 +2,12 @@ import argparse
 import toml
 
 def __process(input_path: str, output_path: str, suffix: str):
-    with open(input_path, "rb") as f:
+    with open(input_path, "r") as f:
         data = toml.load(f)
     
     data["project"]["name"] = f"{data['project']['name']}_{suffix}"
     
-    with open(output_path, "wb") as f:
+    with open(output_path, "w") as f:
         toml.dump(data, f)
         
 if __name__ == "__main__":
