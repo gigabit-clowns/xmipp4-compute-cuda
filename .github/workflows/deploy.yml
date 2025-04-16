@@ -36,7 +36,7 @@ jobs:
           CIBW_BUILD: "cp313-*" # Python agnostic, pick any version
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: |
-            CUDAARCHS=${{ matrix.cuda-architectures }}
+            CUDAARCHS="${{ matrix.cuda-architectures }}"
           CIBW_BEFORE_ALL: | # Based on: https://stackoverflow.com/a/77212119
             yum install -y wget
             wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
