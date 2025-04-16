@@ -6,6 +6,8 @@ on:
       - published
   workflow_dispatch:
 
+  pull_request:
+
 env:
   RHEL8_NVIDIA_REPO: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
   RHEL8_NVIDIA_GPGKEY: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/D42D0685.pub"
