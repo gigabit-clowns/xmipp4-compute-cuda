@@ -58,9 +58,9 @@ jobs:
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
-          CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
-            pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
-          CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            auditwheel repair -w {dest_dir} {wheel}
+            --exclude "libxmipp4-core.so*"
       
       - name: Upload wheels
         uses: actions/upload-artifact@v4
