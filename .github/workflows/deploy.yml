@@ -13,13 +13,13 @@ jobs:
     name: Build wheels for linux-x86_64 ${{ matrix.name }}
     strategy:
       matrix:
-        cuda-architectures: 
-        - "35;50;61;70;75;80;86;89"
         include:
         - name: "cu114"
           cuda-toolkit-package-suffix: "11-4"
+          cuda-architectures: "35;50;61;70;75;80;86;89"
         - name: "cu118"
           cuda-toolkit-package-suffix: "11-8"
+          cuda-architectures: "35;50;61;70;75;80;86;89"
         - name: "cu121"
           cuda-toolkit-package-suffix: "12-1"
           cuda-architectures: "50;61;70;75;80;86;89"
