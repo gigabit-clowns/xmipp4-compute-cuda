@@ -8,6 +8,10 @@ on:
 
   pull_request:
 
+env:
+  RHEL8_NVIDIA_REPO: > 
+    "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo"
+
 jobs:
   build_wheel_linux_x86_64:
     name: Build wheels for linux-x86_64 ${{ matrix.name }}
@@ -33,11 +37,11 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.2
         env:
           CIBW_ARCHS: "x86_64"
-          CIBW_BUILD: "cp313-*" # Python agnostic, pick any version
+          CIBW_BUILD: "cp313-manylinux_x86_64*" # Python agnostic, pick any version
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_ALL: | # Based on: https://stackoverflow.com/a/77212119
             yum install -y wget
-            wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
+            wget ${{ env.RHEL8_NVIDIA_REPO }} -O /etc/yum.repos.d/cuda.repo
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
           CIBW_ENVIRONMENT: |
