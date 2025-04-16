@@ -73,7 +73,7 @@ jobs:
 
   upload_pypi:
     name: Upload to PyPI
-    needs: [build_sdist, build_wheel_linux_x86_64]
+    needs: [build_sdist, build_wheel_manylinux_x86_64]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
