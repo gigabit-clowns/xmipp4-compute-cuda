@@ -14,15 +14,15 @@ env:
 
 jobs:
   build_wheel_manylinux_x86_64:
-    name: Build wheels for manylinux_x86_64 ${{ matrix.name }}
+    name: Build wheels for manylinux_x86_64 ${{ matrix.suffix }}
     strategy:
       matrix:
         include:
-        - name: "cu114"
+        - suffix: "cu114"
           cuda-toolkit-package-suffix: "11-4"
-        - name: "cu118"
+        - suffix: "cu118"
           cuda-toolkit-package-suffix: "11-8"
-        - name: "cu121"
+        - suffix: "cu121"
           cuda-toolkit-package-suffix: "12-1"
 
     runs-on: ubuntu-latest
@@ -30,6 +30,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Patch pyproject.toml with the CUDA suffix
+        run: >
+          python scripts/patch_cuda_suffix_pyproject.py
+          -i ./pyproject.toml 
+          --suffix ${{matrix.suffix}}
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.2
         env:
