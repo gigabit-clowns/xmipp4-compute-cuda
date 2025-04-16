@@ -36,13 +36,13 @@ jobs:
           CIBW_BUILD: "cp313-*" # Python agnostic, pick any version
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: |
+            CUDACXX=/usr/local/cuda/bin/nvcc
             CUDAARCHS="${{ matrix.cuda-architectures }}"
           CIBW_BEFORE_ALL: | # Based on: https://stackoverflow.com/a/77212119
             yum install -y wget
             wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
-            export PATH=/usr/local/cuda/bin:$PATH
           CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
             pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
           CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
