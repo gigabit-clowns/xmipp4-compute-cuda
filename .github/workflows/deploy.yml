@@ -10,44 +10,37 @@ on:
 
 jobs:
   build_wheel_linux_x86_64:
-    name: Build wheels for linux-x86_64 cuda-${{ matrix.cuda-version }}
+    name: Build wheels for linux-x86_64 ${{ matrix.name }}
     strategy:
       matrix:
-        cuda-version: 
-        - "11.4.3"
-        - "11.8.0"
-        - "12.1.0"
+        include:
+        - name: "cu118"
+          cudatoolkit-package-suffix: "11-8"
 
     runs-on: ubuntu-latest
-    container:
-      image: nvidia/cuda:${{ matrix.cuda-version }}-devel-ubuntu20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Install Python
-        run: |
-          apt-get update && apt-get install -y python3 python3-pip
-          python3 -m pip install --upgrade pip
-
-      - name: Install cibuildwheel
-        run: pip install cibuildwheel
-
       - name: Build wheels
-        run: python3 -m cibuildwheel --output-dir wheelhouse
+        uses: pypa/cibuildwheel@v2.23.2
         env:
           CIBW_ARCHS: "x86_64"
           CIBW_ENVIRONMENT: "CUDA_HOME=/usr/local/cuda"
           CIBW_BUILD: "cp313-*" # Python agnostic, pick any version
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_BEFORE_BUILD: | # TODO remove when xmipp4-core is available in PyPI
+          CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
+            yum install -y wget
+            wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
+            yum clean all
+            yum -y install cuda-toolkit-${{ matrix.cudatoolkit-package-suffix }}
             pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
           CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
       
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels-linux-x86_64-cuda-${{ matrix.cuda-version }}
+          name: cibw-wheels-linux-x86_64-${{ matrix.name }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
