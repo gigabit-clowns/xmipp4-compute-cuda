@@ -59,6 +59,7 @@ Homepage = "https://github.com/gigabit-clowns/xmipp4-compute-cuda"
 [tool.scikit-build]
 experimental=true # For wheel.install-dir
 wheel.install-dir="/data"
+wheel.py-api = "py3" # Python version agnostic
 cmake.version = ">=3.16"
 cmake.args = []
 cmake.verbose = false
