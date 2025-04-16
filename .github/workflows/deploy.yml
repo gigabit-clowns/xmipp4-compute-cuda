@@ -14,8 +14,10 @@ jobs:
     strategy:
       matrix:
         cuda-version: 
-        - "11.8"
-        - "12.2"
+        - "11.2.0"
+        - "11.8.0"
+        - "12.1.0"
+
     runs-on: ubuntu-latest
     container:
       image: nvidia/cuda:${{ matrix.cuda-version }}-devel-ubuntu20.04
