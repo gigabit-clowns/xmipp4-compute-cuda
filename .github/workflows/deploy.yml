@@ -14,19 +14,16 @@ env:
 
 jobs:
   build_wheel_manylinux_x86_64:
-    name: Build wheels for linux-x86_64 ${{ matrix.name }}
+    name: Build wheels for manylinux_x86_64 ${{ matrix.name }}
     strategy:
       matrix:
         include:
         - name: "cu114"
           cuda-toolkit-package-suffix: "11-4"
-          cuda-architectures: "35;50;61;70;75;80;86;89"
         - name: "cu118"
           cuda-toolkit-package-suffix: "11-8"
-          cuda-architectures: "35;50;61;70;75;80;86;89"
         - name: "cu121"
           cuda-toolkit-package-suffix: "12-1"
-          cuda-architectures: "50;61;70;75;80;86;89"
 
     runs-on: ubuntu-latest
     steps:
@@ -46,7 +43,6 @@ jobs:
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
-            CUDAARCHS="${{ matrix.cuda-architectures }}"
           CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
             pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
           CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
