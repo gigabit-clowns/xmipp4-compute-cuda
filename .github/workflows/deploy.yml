@@ -16,6 +16,7 @@ jobs:
         include:
         - name: "cu114"
           cuda-toolkit-package-suffix: "11-4"
+          cuda-compute-capabilities: "compute_86,sm_86"
         - name: "cu118"
           cuda-toolkit-package-suffix: "11-8"
         - name: "cu121"
@@ -38,6 +39,7 @@ jobs:
             wget https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo -O /etc/yum.repos.d/cuda.repo
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-toolkit-package-suffix }}
+            ls /usr/local/
           CIBW_BEFORE_BUILD: | # TODO remove last line when xmipp4-core is available in PyPI
             pip install git+https://github.com/gigabit-clowns/xmipp4-core@main
           CIBW_REPAIR_WHEEL_COMMAND: "" # TODO remove when xmipp4-core is available in PyPI
