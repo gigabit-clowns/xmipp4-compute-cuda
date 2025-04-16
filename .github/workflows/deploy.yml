@@ -6,8 +6,6 @@ on:
       - published
   workflow_dispatch:
 
-  pull_request:
-
 jobs:
   build_wheel_manylinux:
     name: Build wheels for manylinux_${{ matrix.platform.architecture }} ${{ matrix.cuda-version.wheel-suffix }}
