@@ -40,7 +40,7 @@ jobs:
         id: cuda-toolkit
         with:
           cuda: ${{ matrix.cuda }}
-          method: 'network'
+          method: ${{ runner.os=='Linux' && 'network' || 'local' }}
           sub-packages: ${{ runner.os=='Linux' && '["nvcc", "toolkit"]' || '["nvcc", "toolkit"]' }} # Fake ternary operator
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
