@@ -40,11 +40,11 @@ jobs:
         id: cuda-toolkit
         with:
           cuda: ${{ matrix.cuda }}
-          method: ${{ runner.os=='Linux' && 'network' || 'local' }} # Fake ternary operator
-          sub-packages: '["nvcc", "toolkit"]'
+          method: 'network'
+          sub-packages: ${{ runner.os=='Linux' && '["nvcc", "toolkit"]' || '[]' }} # Fake ternary operator
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
-          use-github-cache: false
+          use-github-cache: ${{ runner.os!='Windows' }}
 
       - name: Install xmipp4-core
         working-directory: ${{ github.workspace }}/../
