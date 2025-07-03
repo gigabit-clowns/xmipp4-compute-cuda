@@ -45,7 +45,6 @@ jobs:
           non-cuda-sub-packages: '["libcublas", "libcufft", "libcusolver"]'
           log-file-suffix: '${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.cuda}}.txt'
           use-github-cache: ${{ runner.os!='Windows' }}
-          use-local-cache: ${{ runner.os!='Windows' }}
 
       - name: Install xmipp4-core
         working-directory: ${{ github.workspace }}/../
