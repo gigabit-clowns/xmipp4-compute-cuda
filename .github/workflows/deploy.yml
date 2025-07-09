@@ -55,33 +55,13 @@ jobs:
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }}
             dnf -y install gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc-c++
-            echo "------------------------- Start -------------------------"
-            ls -ln /usr/bin | grep gcc
-            ls /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin
-            echo "------------------------- End -------------------------"
-            gcc --version
-            g++ --version
             rm -f /usr/bin/gcc /usr/bin/g++
             alternatives --install /usr/bin/gcc gcc /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc 100
             alternatives --install /usr/bin/g++ g++ /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++ 100
-            echo "Print again:"
-            ls -ln /usr/bin | grep gcc
-            echo "Alternatives:"
-            ls -ln /etc/alternatives | grep gcc
-            echo "Update alternatives:"
-            alternatives --display gcc
-            alternatives --display g++
-            echo "Specific:"
-            /etc/alternatives/gcc --version
-            /etc/alternatives/g++ --version
-            echo "PATH: $PATH"
-            PATH=/usr/bin:$PATH
-            echo "PATH: $PATH"
-            echo "Final:"
-            gcc --version
-            g++ --version
+            PATH=/etc/alternatives:$PATH
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
+            PATH=/etc/alternatives:$PATH
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
