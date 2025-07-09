@@ -58,16 +58,11 @@ jobs:
             rm -f /usr/bin/gcc /usr/bin/g++
             alternatives --install /usr/bin/gcc gcc /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc 100
             alternatives --install /usr/bin/g++ g++ /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++ 100
-            PATH=/usr/bin:$PATH
-            CC=gcc
-            CXX=g++
-            echo "CC: $CC"
-            echo "CXX: $CXX"
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
-            PATH=/usr/bin:$PATH
-            CC=gcc
-            CXX=g++
+            CC=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc
+            CXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
+            CUDAHOSTCXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
