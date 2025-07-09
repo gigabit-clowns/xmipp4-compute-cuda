@@ -77,12 +77,10 @@ jobs:
             echo "Final:"
             gcc --version
             g++ --version
+            echo "PATH: $PATH"
+            sudo update-alternatives --config gcc
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
-            CC=/usr/bin/gcc-${{ matrix.cuda-version.gcc-version }}
-            CXX=/usr/bin/g++-${{ matrix.cuda-version.gcc-version }}
-            CUDAHOSTCXX=/usr/bin/g++-${{ matrix.cuda-version.gcc-version }}
-            NVCCFLAGS="-allow-unsupported-compiler"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
