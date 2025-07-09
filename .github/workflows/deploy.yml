@@ -78,9 +78,10 @@ jobs:
             gcc --version
             g++ --version
             echo "PATH: $PATH"
-            sudo update-alternatives --config gcc
+            update-alternatives --config gcc
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
+            PATH=/usr/bin:$PATH
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
