@@ -74,13 +74,14 @@ jobs:
             echo "Specific:"
             /etc/alternatives/gcc --version
             /etc/alternatives/g++ --version
+            echo "PATH: $PATH"
+            PATH=/usr/bin:$PATH
+            echo "PATH: $PATH"
             echo "Final:"
             gcc --version
             g++ --version
-            echo "PATH: $PATH"
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
-            PATH=/usr/bin:$PATH
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
