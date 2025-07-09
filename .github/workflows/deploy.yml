@@ -59,6 +59,7 @@ jobs:
             alternatives --install /usr/bin/gcc gcc /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc 100
             alternatives --install /usr/bin/g++ g++ /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++ 100
           CIBW_ENVIRONMENT: |
+            PATH=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin:$PATH
             CUDACXX=/usr/local/cuda/bin/nvcc
             CC=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc
             CXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
