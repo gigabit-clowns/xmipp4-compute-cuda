@@ -66,6 +66,11 @@ jobs:
             alternatives --install /usr/bin/g++ g++ /opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++ 100
             echo "Print again:"
             ls -ln /usr/bin | grep gcc
+            echo "Alternatives:"
+            ls -ln /etc/alternatives | grep gcc
+            echo "Update alternatives:"
+            alternatives --display gcc
+            alternatives --display g++
             gcc --version
             g++ --version
           CIBW_ENVIRONMENT: |
