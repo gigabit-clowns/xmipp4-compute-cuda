@@ -78,7 +78,6 @@ jobs:
             gcc --version
             g++ --version
             echo "PATH: $PATH"
-            update-alternatives --config gcc
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
             PATH=/usr/bin:$PATH
