@@ -71,6 +71,10 @@ jobs:
             echo "Update alternatives:"
             alternatives --display gcc
             alternatives --display g++
+            echo "Specific:"
+            /etc/alternatives/gcc --version
+            /etc/alternatives/g++ --version
+            echo "Final:"
             gcc --version
             g++ --version
           CIBW_ENVIRONMENT: |
