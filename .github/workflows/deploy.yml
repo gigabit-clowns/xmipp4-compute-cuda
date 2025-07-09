@@ -53,7 +53,8 @@ jobs:
             yum install -y wget
             wget ${{ env.RHEL8_NVIDIA_REPO }} -O /etc/yum.repos.d/cuda.repo
             yum clean all
-            yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }} gcc-${{ matrix.cuda-version.gcc-version }} gcc-c++-${{ matrix.cuda-version.gcc-version }}
+            yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }}
+            yum -y install gcc-${{ matrix.cuda-version.gcc-version }} gcc-c++-${{ matrix.cuda-version.gcc-version }}
             alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.cuda-version.gcc-version }} 100
             alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.cuda-version.gcc-version }} 100
           CIBW_ENVIRONMENT: |
