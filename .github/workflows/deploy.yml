@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         cuda-version:
-        - { wheel-suffix: "cu114", toolkit-package-suffix: "11-4", gcc-version: "9" }
-        - { wheel-suffix: "cu118", toolkit-package-suffix: "11-8", gcc-version: "11" }
-        - { wheel-suffix: "cu121", toolkit-package-suffix: "12-1", gcc-version: "12" }
+        - { wheel-suffix: "cu114", toolkit-package-suffix: "11-4" }
+        - { wheel-suffix: "cu118", toolkit-package-suffix: "11-8" }
+        - { wheel-suffix: "cu121", toolkit-package-suffix: "12-1" }
         platform:
         - { runner: "ubuntu-latest", architecture: "x86_64", repo-architecture: "x86_64"}
         - { runner: "ubuntu-24.04-arm", architecture: "aarch64", repo-architecture: "sbsa"}
@@ -54,14 +54,9 @@ jobs:
             wget ${{ env.RHEL8_NVIDIA_REPO }} -O /etc/yum.repos.d/cuda.repo
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }}
-            rpm -ql gcc-c++
-            ls -l /usr/local/cuda/bin/
-            ls -l /usr/bin/
-            /usr/bin/g++ --version
-            dnf -y install gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc-c++
           CIBW_ENVIRONMENT: >
             CUDACXX=/usr/local/cuda/bin/nvcc
-            CUDAHOSTCXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
+            CUDAHOSTCXX=/usr/bin/g++
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"
