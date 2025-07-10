@@ -58,6 +58,7 @@ jobs:
           CIBW_ENVIRONMENT: |
             CUDACXX=/usr/local/cuda/bin/nvcc
             CUDAHOSTCXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
+            CMAKE_CUDA_HOST_COMPILER=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
             --exclude "libxmipp4-core.so*"

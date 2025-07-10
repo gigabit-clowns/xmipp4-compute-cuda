@@ -61,7 +61,6 @@ experimental=true # For wheel.install-dir
 wheel.install-dir="/data"
 wheel.py-api = "py3" # Python version agnostic
 cmake.version = ">=3.16"
-cmake.args = []
 cmake.verbose = false
 cmake.build-type = "Release"
 
