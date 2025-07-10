@@ -56,9 +56,8 @@ jobs:
             yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }}
             dnf -y install gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc-c++
           CIBW_ENVIRONMENT: |
+            PATH=/usr/local/cuda/bin:gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin:$PATH
             CUDACXX=/usr/local/cuda/bin/nvcc
-            CC=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc
-            CXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
             CUDAHOSTCXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
