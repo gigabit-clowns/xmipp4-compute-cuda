@@ -55,6 +55,7 @@ jobs:
             yum clean all
             yum -y install cuda-toolkit-${{ matrix.cuda-version.toolkit-package-suffix }}
             rpm -ql gcc-c++
+            ls -l /usr/local/cuda/bin/
             dnf -y install gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc gcc-toolset-${{ matrix.cuda-version.gcc-version }}-gcc-c++
           CIBW_ENVIRONMENT: >
             CUDACXX=/usr/local/cuda/bin/nvcc
