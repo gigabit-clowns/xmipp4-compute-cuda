@@ -58,8 +58,6 @@ jobs:
           CIBW_ENVIRONMENT: |
             PATH=/usr/local/cuda/bin:/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin:$PATH
             CUDACXX=/usr/local/cuda/bin/nvcc
-            CC=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/gcc
-            CXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
             CUDAHOSTCXX=/opt/rh/gcc-toolset-${{ matrix.cuda-version.gcc-version }}/root/usr/bin/g++
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             auditwheel repair -w {dest_dir} {wheel}
