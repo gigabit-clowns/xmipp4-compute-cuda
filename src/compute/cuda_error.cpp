@@ -54,4 +54,3 @@ void cuda_check(cudaError_t code,
 
 } // namespace compute
 } // namespace xmipp4
-
