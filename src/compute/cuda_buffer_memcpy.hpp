@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_buffer_memcpy.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines functions to copy between cuda buffers
- * @date 2024-12-07
- * 
- */
-
 #include <xmipp4/core/span.hpp>
 
 namespace xmipp4 

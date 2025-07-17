@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_block_pool.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines memory allocation caching data structures.
- * @date 2024-11-04
- * 
- */
-
 #include "cuda_memory_block.hpp"
 #include "cuda_memory_block_usage_tracker.hpp"
 

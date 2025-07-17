@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_deferred_memory_block_release.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines data structure representing a memory cache.
- * @date 2024-11-28
- * 
- */
-
 #include "cuda_memory_block.hpp"
 #include "cuda_memory_block_pool.hpp"
 #include "../cuda_event.hpp"

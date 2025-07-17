@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_buffer_memcpy.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_buffer_memcpy.hpp
- * @date 2024-12-07
- * 
- */
-
 #include "cuda_buffer_memcpy.hpp"
 
 #include <xmipp4/cuda/compute/cuda_error.hpp>

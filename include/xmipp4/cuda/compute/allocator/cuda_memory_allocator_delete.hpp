@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_allocator_delete.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the cuda_memory_allocator_delete.hpp class
- * @date 2024-11-29
- * 
- */
-
 #include <functional>
 
 namespace xmipp4

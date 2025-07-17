@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_host_malloc.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_host_malloc class.
- * @date 2024-11-06
- * 
- */
-
 #include <cstddef>
 
 /**

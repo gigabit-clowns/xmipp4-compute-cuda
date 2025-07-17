@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_to_host_transfer.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_to_host_transfer class
- * @date 2024-11-06
- * 
- */
-
 #include <xmipp4/core/compute/device_to_host_transfer.hpp>
 
 #include "cuda_event.hpp"

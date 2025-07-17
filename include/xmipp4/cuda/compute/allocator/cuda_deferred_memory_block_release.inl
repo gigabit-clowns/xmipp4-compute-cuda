@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_deferred_memory_block_release.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_deferred_memory_block_release.hpp
- * @date 2024-11-28
- * 
- */
-
 #include "cuda_deferred_memory_block_release.hpp"
 
 #include <algorithm>

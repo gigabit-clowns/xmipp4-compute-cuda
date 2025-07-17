@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file default_cuda_device_buffer.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of default_cuda_device_buffer.hpp
- * @date 2024-10-30
- * 
- */
-
 #include "default_cuda_device_buffer.hpp"
 
 #include <xmipp4/cuda/compute/allocator/cuda_memory_block.hpp>

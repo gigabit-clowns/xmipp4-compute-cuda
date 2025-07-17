@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_malloc.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_malloc class.
- * @date 2024-11-06
- * 
- */
-
 #include <cstddef>
 
 namespace xmipp4 

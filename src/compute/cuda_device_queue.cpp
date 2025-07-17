@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_queue.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_queue.hpp
- * @date 2024-10-30
- * 
- */
-
 #include <xmipp4/cuda/compute/cuda_device_queue.hpp>
 
 #include <xmipp4/cuda/compute/cuda_error.hpp>

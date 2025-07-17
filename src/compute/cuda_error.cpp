@@ -18,16 +18,7 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_error.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_error.hpp
- * @date 2024-11-17
- * 
- * Based on:
- * https://leimao.github.io/blog/Proper-CUDA-Error-Checking/
- * 
- */
+// Based on: https://leimao.github.io/blog/Proper-CUDA-Error-Checking/
 
 #include <xmipp4/cuda/compute/cuda_error.hpp>
 

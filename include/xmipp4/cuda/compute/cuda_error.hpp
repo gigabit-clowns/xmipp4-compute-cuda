@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_error.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines a cuda error exception and methods that throw it.
- * @date 2024-11-17
- * 
- */
-
 #include <stdexcept>
 
 #include <cuda_runtime.h>

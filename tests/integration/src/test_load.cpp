@@ -18,13 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file test_load.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Test that the plugin loads and registers.
- * @date 2024-10-30
- */
-
 
 #include <catch2/catch_test_macros.hpp>
 

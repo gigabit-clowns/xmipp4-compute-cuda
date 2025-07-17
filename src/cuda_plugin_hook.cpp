@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_plugin_hook.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Exports the entry point for this plugin.
- * @date 2024-10-30
- * 
- */
-
 #include "cuda_plugin.hpp"
 
 #include <xmipp4/core/platform/dynamic_shared_object.h>

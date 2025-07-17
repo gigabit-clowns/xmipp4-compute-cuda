@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_caching_memory_allocator.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_caching_memory_allocator
- * @date 2024-11-28
- * 
- */
-
 #include "cuda_memory_block_cache.hpp"
 
 #include <xmipp4/core/platform/attributes.hpp>

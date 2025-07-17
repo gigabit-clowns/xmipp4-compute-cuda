@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_plugin.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Definition of the cuda_plugin class
- * @date 2024-10-26
- * 
- */
-
 
 #include <xmipp4/core/plugin.hpp>
 

@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device class.
- * @date 2024-10-30
- * 
- */
-
 #include <xmipp4/core/compute/device.hpp>
 
 #include "cuda_device_queue_pool.hpp"

@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_copy.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_copy class
- * @date 2024-11-15
- * 
- */
-
 #include <xmipp4/core/compute/device_copy.hpp>
 
 namespace xmipp4 

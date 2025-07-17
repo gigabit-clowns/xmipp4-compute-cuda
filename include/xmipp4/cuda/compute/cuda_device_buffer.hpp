@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_buffer.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_buffer interface
- * @date 2024-10-30
- * 
- */
-
 #include <xmipp4/core/compute/device_buffer.hpp>
 
 namespace xmipp4 

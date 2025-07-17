@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_event.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_event.hpp
- * @date 2024-11-07
- * 
- */
-
 #include <xmipp4/cuda/compute/cuda_event.hpp>
 
 #include <xmipp4/cuda/compute/cuda_error.hpp>

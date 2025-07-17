@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_block_usage_tracker.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines data structure representing a memory block.
- * @date 2024-11-30
- * 
- */
-
 #include "cuda_memory_block.hpp"
 
 #include <xmipp4/core/span.hpp>

@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_block_pool.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_memory_block_pool.hpp
- * @date 2024-11-04
- * 
- */
-
 #include "cuda_memory_block_pool.hpp"
 
 #include <xmipp4/core/memory/align.hpp>

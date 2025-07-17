@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_block_cache.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_memory_block_cache.hpp
- * @date 2024-11-28
- * 
- */
-
 #include "cuda_memory_block_cache.hpp"
 
 #include <stdexcept>

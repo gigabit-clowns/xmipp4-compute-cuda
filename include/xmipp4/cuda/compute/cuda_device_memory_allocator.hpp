@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_memory_allocator.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines the compute::cuda_device_memory_allocator interface
- * @date 2024-10-31
- * 
- */
-
 #include "allocator/cuda_device_malloc.hpp"
 #include "allocator/cuda_caching_memory_allocator.hpp"
 

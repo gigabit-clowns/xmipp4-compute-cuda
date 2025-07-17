@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file test_cuda_memory_block_pool.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Tests for cuda_memory_block_pool.hpp
- * @date 2024-11-19
- * 
- */
-
 #include <xmipp4/cuda/compute/allocator/cuda_memory_block_pool.hpp>
 
 #include <cstddef>

@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_memory_block_usage_tracker.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_memory_block_usage_tracker.hpp
- * @date 2024-11-30
- * 
- */
-
 #include "cuda_memory_block_usage_tracker.hpp"
 
 #include <algorithm>

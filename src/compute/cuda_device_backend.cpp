@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_device_backend.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_device_backend.hpp
- * @date 2024-10-30
- * 
- */
-
 #include <xmipp4/cuda/compute/cuda_device_backend.hpp>
 
 #include <xmipp4/cuda/compute/cuda_error.hpp>

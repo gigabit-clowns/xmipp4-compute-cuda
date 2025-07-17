@@ -18,14 +18,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_host_to_device_transfer.cpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Implementation of cuda_host_to_device_transfer.hpp
- * @date 2024-11-06
- * 
- */
-
 #include <xmipp4/cuda/compute/cuda_host_to_device_transfer.hpp>
 
 #include <xmipp4/cuda/compute/cuda_device_queue.hpp>

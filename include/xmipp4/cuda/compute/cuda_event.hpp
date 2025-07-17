@@ -20,14 +20,6 @@
  *  e-mail address 'xmipp@cnb.csic.es'
  ***************************************************************************/
 
-/**
- * @file cuda_event.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_event class.
- * @date 2024-11-13
- * 
- */
-
 #include <xmipp4/core/compute/device_event.hpp>
 #include <xmipp4/core/compute/device_to_host_event.hpp>
 
