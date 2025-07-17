@@ -1,13 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-/**
- * @file cuda_device_backend.hpp
- * @author Oier Lauzirika Zarrabeitia (oierlauzi@bizkaia.eu)
- * @brief Defines cuda_device_backend interface
- * @date 2024-10-31
- * 
- */
 
 #include <xmipp4/core/compute/device_backend.hpp>
 #include <xmipp4/core/compute/device_create_parameters.hpp>
