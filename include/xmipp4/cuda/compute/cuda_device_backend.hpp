@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <xmipp4/core/compute/device_backend.hpp>
-#include <xmipp4/core/compute/device_create_parameters.hpp>
+#include <xmipp4/core/hardware/device_backend.hpp>
+#include <xmipp4/core/hardware/device_create_parameters.hpp>
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class device_manager;
@@ -34,5 +34,5 @@ public:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

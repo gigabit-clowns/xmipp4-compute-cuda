@@ -5,7 +5,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
  
 /**
@@ -48,7 +48,7 @@ private:
 
 };
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_device_malloc.inl"

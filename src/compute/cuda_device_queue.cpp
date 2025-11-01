@@ -9,7 +9,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 cuda_device_queue::cuda_device_queue()
@@ -89,5 +89,5 @@ bool cuda_device_queue::is_idle() const noexcept
     return result;
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

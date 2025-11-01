@@ -14,7 +14,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 /**
@@ -75,7 +75,7 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_deferred_memory_block_release.inl"

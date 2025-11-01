@@ -6,7 +6,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -43,5 +43,5 @@ cuda_memory_block_usage_tracker::get_queues() const noexcept
     return make_span(m_queues);
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

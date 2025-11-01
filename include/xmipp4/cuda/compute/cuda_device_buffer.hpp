@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-#include <xmipp4/core/compute/device_buffer.hpp>
+#include <xmipp4/core/hardware/device_buffer.hpp>
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_device_buffer
@@ -25,5 +25,5 @@ public:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

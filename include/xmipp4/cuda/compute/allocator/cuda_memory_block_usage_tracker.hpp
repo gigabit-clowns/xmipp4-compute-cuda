@@ -9,7 +9,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_device_queue;
@@ -54,7 +54,7 @@ private:
 
 };
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_memory_block_usage_tracker.inl"

@@ -7,7 +7,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -24,5 +24,5 @@ void cuda_host_malloc::deallocate(void* data, std::size_t)
     XMIPP4_CUDA_CHECK( cudaFreeHost(data) );
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -7,15 +7,15 @@
 #include <xmipp4/cuda/compute/cuda_device_buffer.hpp>
 
 #include <xmipp4/core/memory/align.hpp>
-#include <xmipp4/core/compute/checks.hpp>
-#include <xmipp4/core/compute/host_buffer.hpp>
-#include <xmipp4/core/compute/copy_region.hpp>
+#include <xmipp4/core/hardware/checks.hpp>
+#include <xmipp4/core/hardware/host_buffer.hpp>
+#include <xmipp4/core/hardware/copy_region.hpp>
 
 #include <cuda_runtime.h>
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 template <cudaMemcpyKind direction, typename SrcBuffer, typename DstBuffer>
@@ -112,5 +112,5 @@ void cuda_memcpy(const host_buffer &src,
     cuda_memcpy_impl<cudaMemcpyHostToDevice>(src, dst, regions, queue);
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

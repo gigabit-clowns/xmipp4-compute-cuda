@@ -7,7 +7,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 /**
@@ -40,5 +40,5 @@ void cuda_check(cudaError_t code,
  */
 #define XMIPP4_CUDA_CHECK(val) cuda_check((val), #val, __FILE__, __LINE__)
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

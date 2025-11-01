@@ -7,7 +7,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_device_queue;
@@ -106,7 +106,7 @@ struct cuda_memory_block_less
                     const cuda_memory_block &rhs ) const noexcept;
 };
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_memory_block.inl"

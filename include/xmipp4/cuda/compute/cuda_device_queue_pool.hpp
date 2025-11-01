@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-#include <xmipp4/core/compute/device_queue_pool.hpp>
+#include <xmipp4/core/hardware/device_queue_pool.hpp>
 
 #include "cuda_device_queue.hpp"
 
@@ -9,7 +9,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 /**
@@ -39,5 +39,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

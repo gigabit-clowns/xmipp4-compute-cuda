@@ -9,7 +9,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 cuda_event::cuda_event()
@@ -106,5 +106,5 @@ bool cuda_event::is_signaled() const
     return result;
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -6,7 +6,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -100,5 +100,5 @@ bool cuda_memory_block_less::operator()(const cuda_memory_block &lhs,
     return result;
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

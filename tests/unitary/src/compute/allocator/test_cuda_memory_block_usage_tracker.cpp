@@ -8,7 +8,7 @@
 #include <trompeloeil.hpp>
 
 using namespace xmipp4;
-using namespace xmipp4::compute;
+using namespace xmipp4::hardware;
 
 TEST_CASE("adding unique queue on an cuda_memory_block_usage_tracker should succeed", "[cuda_memory_block_usage_tracker]")
 {

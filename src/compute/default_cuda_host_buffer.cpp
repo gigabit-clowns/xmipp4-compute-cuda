@@ -9,7 +9,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 default_cuda_host_buffer
@@ -79,5 +79,5 @@ default_cuda_host_buffer::allocate(std::size_t size,
     );
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

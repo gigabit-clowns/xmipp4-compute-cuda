@@ -5,7 +5,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class copy_region;
@@ -85,5 +85,5 @@ void cuda_memcpy(const host_buffer &src,
                  span<const copy_region> regions,
                  cuda_device_queue &queue );
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -9,7 +9,7 @@
  */
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 struct cuda_host_malloc
@@ -39,7 +39,7 @@ struct cuda_host_malloc
 
 };
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_host_malloc.inl"

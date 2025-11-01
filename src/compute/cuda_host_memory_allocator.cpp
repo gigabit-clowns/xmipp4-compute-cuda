@@ -8,7 +8,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 XMIPP4_CONST_CONSTEXPR
@@ -78,5 +78,5 @@ void cuda_host_memory_allocator::deallocate(const cuda_memory_block &block)
     m_allocator.deallocate(block);
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

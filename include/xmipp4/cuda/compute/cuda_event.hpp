@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-#include <xmipp4/core/compute/device_event.hpp>
-#include <xmipp4/core/compute/device_to_host_event.hpp>
+#include <xmipp4/core/hardware/device_event.hpp>
+#include <xmipp4/core/hardware/device_to_host_event.hpp>
 
 #include <cuda_runtime.h>
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class device_queue;
@@ -49,5 +49,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -9,7 +9,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 void cuda_device_copy::copy(const device_buffer &src_buffer,
@@ -51,5 +51,5 @@ void cuda_device_copy::copy(const cuda_device_buffer &src_buffer,
     cuda_memcpy(src_buffer, dst_buffer, regions, queue);
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

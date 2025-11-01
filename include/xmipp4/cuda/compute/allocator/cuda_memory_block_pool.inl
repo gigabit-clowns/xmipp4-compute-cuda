@@ -11,7 +11,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -456,5 +456,5 @@ void release_blocks(cuda_memory_block_pool &blocks, Allocator &allocator)
     }
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
