@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-#include <xmipp4/core/compute/device_to_host_transfer.hpp>
+#include <xmipp4/core/hardware/device_to_host_transfer.hpp>
 
 #include "cuda_event.hpp"
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_host_buffer;
@@ -67,5 +67,5 @@ public:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -4,7 +4,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 template <typename Allocator>
@@ -26,5 +26,5 @@ void cuda_memory_allocator_delete<Allocator>
     }
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -4,7 +4,7 @@
 #include "allocator/cuda_device_malloc.hpp"
 #include "allocator/cuda_caching_memory_allocator.hpp"
 
-#include <xmipp4/core/compute/device_memory_allocator.hpp>
+#include <xmipp4/core/hardware/device_memory_allocator.hpp>
 #include <xmipp4/core/span.hpp>
 
 #include <map>
@@ -13,7 +13,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_device;
@@ -56,5 +56,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

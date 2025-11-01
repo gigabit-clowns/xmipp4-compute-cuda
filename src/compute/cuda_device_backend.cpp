@@ -5,7 +5,7 @@
 #include <xmipp4/cuda/compute/cuda_error.hpp>
 #include <xmipp4/cuda/compute/cuda_device.hpp>
 
-#include <xmipp4/core/compute/device_manager.hpp>
+#include <xmipp4/core/hardware/device_manager.hpp>
 
 #include <numeric>
 #include <sstream>
@@ -16,7 +16,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 static std::string pci_id_to_string(int bus_id, int device_id, int domain_id)
@@ -127,5 +127,5 @@ bool cuda_device_backend::register_at(device_manager &manager)
     return manager.register_backend(std::make_unique<cuda_device_backend>());
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

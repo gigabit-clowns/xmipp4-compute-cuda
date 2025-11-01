@@ -8,7 +8,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_memory_block;
@@ -63,5 +63,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

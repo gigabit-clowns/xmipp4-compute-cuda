@@ -6,7 +6,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 template <typename Allocator>
@@ -73,5 +73,5 @@ void cuda_caching_memory_allocator<Allocator>
     m_cache.deallocate(block);
 }
     
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

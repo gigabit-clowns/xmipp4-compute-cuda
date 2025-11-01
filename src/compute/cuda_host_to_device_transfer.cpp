@@ -6,13 +6,13 @@
 #include <xmipp4/cuda/compute/cuda_device_buffer.hpp>
 #include <xmipp4/cuda/compute/cuda_device_memory_allocator.hpp>
 
-#include <xmipp4/core/compute/host_buffer.hpp>
+#include <xmipp4/core/hardware/host_buffer.hpp>
 
 #include "cuda_buffer_memcpy.hpp"
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 void cuda_host_to_device_transfer::transfer_copy(const host_buffer &src_buffer, 
@@ -112,5 +112,5 @@ cuda_host_to_device_transfer::transfer(const host_buffer &buffer,
     return result;
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

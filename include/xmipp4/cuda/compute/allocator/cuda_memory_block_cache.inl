@@ -6,7 +6,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -89,5 +89,5 @@ void cuda_memory_block_cache::deallocate(const cuda_memory_block &block)
     }
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

@@ -4,13 +4,13 @@
 #include "allocator/cuda_host_malloc.hpp"
 #include "allocator/cuda_caching_memory_allocator.hpp"
 
-#include <xmipp4/core/compute/host_memory_allocator.hpp>
+#include <xmipp4/core/hardware/host_memory_allocator.hpp>
 
 #include <mutex>
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_device_queue;
@@ -54,5 +54,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

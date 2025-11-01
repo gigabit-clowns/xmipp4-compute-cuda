@@ -9,7 +9,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 cuda_device_queue_pool::cuda_device_queue_pool(int device_index, std::size_t count)
@@ -28,5 +28,5 @@ cuda_device_queue& cuda_device_queue_pool::get_queue(std::size_t index)
     return m_queues.at(index);
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

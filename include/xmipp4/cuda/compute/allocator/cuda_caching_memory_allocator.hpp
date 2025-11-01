@@ -7,7 +7,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 /**
@@ -75,7 +75,7 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_caching_memory_allocator.inl"

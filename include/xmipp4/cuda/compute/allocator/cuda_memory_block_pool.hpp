@@ -8,7 +8,7 @@
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_memory_block_context;
@@ -408,7 +408,7 @@ void deallocate_block(cuda_memory_block_pool &blocks,
 template <typename Allocator>
 void release_blocks(cuda_memory_block_pool &blocks, Allocator &allocator);
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
 
 #include "cuda_memory_block_pool.inl"

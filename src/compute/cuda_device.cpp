@@ -10,13 +10,13 @@
 #include <xmipp4/cuda/compute/cuda_device_copy.hpp>
 #include <xmipp4/cuda/compute/cuda_event.hpp>
 
-#include <xmipp4/core/compute/device_create_parameters.hpp>
+#include <xmipp4/core/hardware/device_create_parameters.hpp>
 
 #include <memory>
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 cuda_device::cuda_device(int device, const device_create_parameters &params)
@@ -76,5 +76,5 @@ cuda_device::create_device_to_host_event()
     return std::make_shared<cuda_event>();
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

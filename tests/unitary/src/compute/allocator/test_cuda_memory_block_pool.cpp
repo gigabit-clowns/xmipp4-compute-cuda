@@ -8,7 +8,7 @@
 #include <trompeloeil.hpp>
 
 using namespace xmipp4;
-using namespace xmipp4::compute;
+using namespace xmipp4::hardware;
 
 class mock_allocator
 {

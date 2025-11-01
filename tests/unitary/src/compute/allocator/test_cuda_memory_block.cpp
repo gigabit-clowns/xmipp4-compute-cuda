@@ -6,7 +6,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-using namespace xmipp4::compute;
+using namespace xmipp4::hardware;
 
 TEST_CASE( "construct cuda_memory_block", "[cuda_memory_block]" )
 {

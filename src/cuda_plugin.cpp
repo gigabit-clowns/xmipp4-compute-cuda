@@ -5,12 +5,12 @@
 #include <xmipp4/cuda/compute/cuda_device_backend.hpp>
 
 #include <xmipp4/core/service_catalog.hpp>
-#include <xmipp4/core/compute/device_manager.hpp>
+#include <xmipp4/core/hardware/device_manager.hpp>
 
 namespace xmipp4 
 {
 
-const std::string cuda_plugin::name = "xmipp4-compute-cuda";
+const std::string cuda_plugin::name = "xmipp4-hardware-cuda";
 
 const std::string& cuda_plugin::get_name() const noexcept
 {
@@ -28,8 +28,8 @@ version cuda_plugin::get_version() const noexcept
 
 void cuda_plugin::register_at(service_catalog& catalog) const
 {
-    compute::cuda_device_backend::register_at(
-        catalog.get_service_manager<compute::device_manager>()
+    hardware::cuda_device_backend::register_at(
+        catalog.get_service_manager<hardware::device_manager>()
     );
 }
 

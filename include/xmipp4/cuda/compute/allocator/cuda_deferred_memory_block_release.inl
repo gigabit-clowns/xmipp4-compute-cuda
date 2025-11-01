@@ -6,7 +6,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 inline
@@ -88,5 +88,5 @@ void cuda_deferred_memory_block_release::pop_completed_events(event_list &events
     }
 }
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

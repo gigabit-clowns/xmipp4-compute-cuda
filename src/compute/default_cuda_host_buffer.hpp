@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
-#include <xmipp4/core/compute/host_buffer.hpp>
+#include <xmipp4/core/hardware/host_buffer.hpp>
 #include <xmipp4/cuda/compute/allocator/cuda_memory_allocator_delete.hpp>
 
 #include <memory>
 
 namespace xmipp4 
 {
-namespace compute
+namespace hardware
 {
 
 class cuda_memory_block;
@@ -63,5 +63,5 @@ private:
 
 }; 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4

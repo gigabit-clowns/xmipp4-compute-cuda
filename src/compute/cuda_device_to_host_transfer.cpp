@@ -10,7 +10,7 @@
 
 namespace xmipp4
 {
-namespace compute
+namespace hardware
 {
 
 void cuda_device_to_host_transfer::transfer_copy(const device_buffer &src_buffer, 
@@ -112,5 +112,5 @@ cuda_device_to_host_transfer::transfer(const cuda_device_buffer &buffer,
 
 
 
-} // namespace compute
+} // namespace hardware
 } // namespace xmipp4
